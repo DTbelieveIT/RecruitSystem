@@ -6,6 +6,7 @@ require('./index.less')
 const rootRoute = {
 	childRoutes: [{
 		path:'/',
+		indexRoute:require('./routes/Home'),
 		component:require('./components/App'),
 		childRoutes:[
 			require('./routes/Company'),

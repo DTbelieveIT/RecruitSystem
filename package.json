@@ -4,16 +4,28 @@
   "description": "This is my homework!",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack-dev-server --config webpack.config.js --hot"
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev": "webpack-dev-server --config ./config/webpack.config.js --inline --hot --progress",
+    "start:prod": "npm run build && node server.build.js",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "webpack --config ./config/webpack.config.js",
+    "build:server": "webpack --config ./config/webpack.server.config.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
     "history": "^3.0.0",
+    "if-env": "^1.0.0",
+    "mongoose": "^4.9.2",
+    "morgan": "^1.8.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "react-router": "^3.0.0"
+    "react-redux": "^5.0.3",
+    "react-router": "^3.0.0",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
@@ -27,9 +39,11 @@
     "less": "^2.7.2",
     "less-loader": "^3.0.0",
     "open-browser-webpack-plugin": "0.0.3",
+    "redux-logger": "^3.0.0",
     "style-loader": "^0.13.2",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1",
-    "webpack-md5-hash": "0.0.5"
+    "webpack-md5-hash": "0.0.5",
+    "webpack-node-externals": "^1.5.4"
   }
 }

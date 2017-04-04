@@ -1,9 +1,11 @@
 import React,{Component, PropTypes} from 'react'
 import {connect} from 'react-redux'
+import {browserHistory} from 'react-router'
 import Button from './Button'
 import EditText from './EditText'
+import {RSAEncrypt} from '../util'
 import {LOGIN,ACCOUNT,PASSWORD} from '../constants/Const'
-import {updateEditText} from '../actions'
+import {updateEditText,fetchDataIfNeed} from '../actions'
 
 class Login extends Component{
 	constructor(props){
@@ -11,15 +13,19 @@ class Login extends Component{
 	}
 
 	componentDidMount(){
-		let account = document.getElementById('account')
 		if(localStorage.getItem('account') !== null){
-			this.props.dispatch(updateEditText(localStroage.getItem('account'),0))
+			this.props.dispatch(updateEditText(localStorage.getItem('account'),0))
 		}
 	}
 
 	componentWillReceiveProps(nextProps){
 		if(nextProps.status === 1){
-			console.log('nextProps change')
+			if(nextProps.data.code === 200){
+				alert('login success')		
+				browserHistory.replace('/')
+			}else{
+				alert('login fail')
+			}
 		}
 	}
 
@@ -40,6 +46,28 @@ class Login extends Component{
 
 	login(){
 		console.log('submit')
+        let dispatch = this._reactInternalInstance._currentElement._owner._instance.props.dispatch
+        dispatch = dispatch === undefined ? this.props.dispatch : dispatch
+        let account = document.querySelector('#account').firstChild.value
+        let password = document.querySelector('#password').firstChild.value
+        if(account.trim().length > 0 && password.trim().length > 0){
+        	password = RSAEncrypt(password)
+        	dispatch(updateEditText(password,1))
+        	localStorage.setItem('account',account)
+        	dispatch(fetchDataIfNeed({
+        		method:'POST',
+        		path:'/login',
+        		category:LOGIN,
+        		query:{
+        			account:account,
+        			password:password
+        		}
+        	}))
+        }else if(account.trim().length === 0){
+        	alert('账号不能为空！')
+        }else if(password.trim().length === 0){
+        	alert('密码不能为空！')
+        }
 	}
 
 	handleKeyDown(e){

@@ -3,7 +3,7 @@ import {
 	REQUEST_DATA,REQUEST_FAIL,RECEIVE_DATA,
 	LOGIN,LOGON,
 	ACCOUNT,PASSWORD,PASSWORD_CONFIRM,
-	CODE,CODE_TIMER
+	PHONE,NAME,CLEAR
 } from '../constants/Const'
 
 /**
@@ -41,6 +41,11 @@ function loginReducer(state={
 	}
 }
 
+let initState = {
+	data:{
+		code:500,
+	}
+}
 /**
  * 注册的reducer
  */
@@ -75,15 +80,16 @@ function logonReducer(state={
 			return Object.assign({}, state, {
 				cpassword:action.value,
 			});
-		case LOGON + CODE:
+		case LOGON + PHONE:
 			return Object.assign({}, state, {
-				code:action.value,
+				phone:action.value,
 			});
-		case CODE_TIMER:
-			return Object.assign({},state,{
-				codeText:action.value,
-				end:action.end,
-			})
+		case LOGON + NAME:
+			return Object.assign({}, state, {
+				name:action.value,
+			});
+		case CLEAR:
+			return initState
 		default:
 			return state;
 	}

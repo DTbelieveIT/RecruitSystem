@@ -6,16 +6,19 @@ var FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 var extractTextplugin = require('extract-text-webpack-plugin');
 var extractCss = new extractTextplugin('style/[name]-[contenthash].css');
 var extractLess = new extractTextplugin('style/[name]-[contenthash].less.css');
+// var extractLess = new extractTextplugin({filename:'style/[name]-[contenthash].less.css',allChunks:true});//所有css chunk打包到一个文件中
 var node_modules = path.resolve(__dirname, '../node_modules');
 
 module.exports = {
   entry:{
-    main:path.resolve(__dirname,'../app/index.js'),
+    main:[path.resolve(__dirname,'../app/index.js'),path.resolve(__dirname,'../app/views/Logon.js')],
     vendor:['react','react-dom'],
   },
   output:{
     path:path.resolve(__dirname,'../build'),
-    filename:'bundle.js'
+    filename:'bundle.js',
+    publicPath:'/',
+    chunkFilename:'[name].[chunkhash:5].chunk.js',
   },
   devtool:'eval',
   target:'web',
@@ -36,10 +39,7 @@ module.exports = {
       },
       {
         test:/\.less$/,
-        use:extractLess.extract({
-          fallback:'style-loader',
-          use:['css-loader?modules','less-loader']
-        })
+        use:extractLess.extract(['css-loader', 'less-loader'])
       },
       {
         test:/\.js$/,
@@ -58,7 +58,7 @@ module.exports = {
     port:9999,
     host:'0.0.0.0',
     hot:true,
-    historyApiFallback:true
+    historyApiFallback:true//浏览器刷新时将路由指向index.html
   },
   resolve:{
     alias:{

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-require('../style/Button.less');
+require('../style/Button.less')
 
 class Button extends Component {
 	constructor(props) {

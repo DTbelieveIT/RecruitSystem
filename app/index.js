@@ -1,35 +1,53 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router,browserHistory } from 'react-router'
+import { Router,Route,IndexRoute,browserHistory } from 'react-router'
 import {Provider} from 'react-redux'
 import configStore from './store/ConfigStore'
-require('./index.less')
+import App from './views/App'
+require('./style/index.less')
 
 const store = configStore()
 
-const rootRoute = {
-	childRoutes: [{
-		path:'/',
-		indexRoute:require('./routes/Home'),
-		component:require('./components/App'),
-		childRoutes:[
-			require('./routes/Company'),
-			require('./routes/Experience')
-		]
-	},{
-		path:'login',
-		component:require('./components/Login')
-	},{
-		path:'logon',
-		component:require('./components/Logon')
-	}]
+const Home = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Home'))
+	},'Home')
+}
+
+const Company = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Company'))
+	},'Company')
+}
+
+const Experience = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Experience'))
+	},'Experience')
+}
+
+const Login = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Login'))
+	},'Login')
+}
+
+const Logon = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Logon'))
+	},'Logon')
 }
 
 render((
 	<Provider store={store}>
-		<Router 
-			history={browserHistory}
-			routes={rootRoute}
-		/>
+		<Router history={browserHistory}>
+			<Route path="/" component={App}>
+				<IndexRoute getComponent={Home}/>
+				<Route path="company" getComponent={Company}/>
+				<Route path="experience" getComponent={Experience}/>
+			</Route>
+			<Route path="login" getComponent={Login}/>
+			<Route path="logon" getComponent={Logon}/>
+		</Router>
 	</Provider>
 ),document.getElementById('app'))

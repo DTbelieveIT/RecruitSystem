@@ -32,6 +32,8 @@ function shouldFetchData(state,requests,dispatch){
 	switch(requests[0].category){
 		case LOGIN:
 			break
+		case LOGON:
+			break
 		default:
 			break
 	}

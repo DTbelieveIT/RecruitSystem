@@ -16,7 +16,7 @@ let PresonSchema = new mongoose.Schema({
 		phone:String,
 		email:String,
 		education:Number,//0：不限，1：专科，2：本科或本科以上
-		isGraduate:Boolean,
+		isGraduate:{tyoe:Boolean,default:false},
 		job:{type:ObjectId,ref:'Job'}
 	},
 	meta:{

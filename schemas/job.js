@@ -17,4 +17,18 @@ let JobSchema = new mongoose.Schema({
 	}
 })
 
+JobSchema.statics = {
+	fetch:function(cb){
+		return this
+		.find({})
+		.sort('meta.updateAt')
+		.exec(cb);
+	},
+	findByName:function(name,cb){
+		return this
+		.findOne({name:name})
+		.exec(cb);
+	}
+};
+
 module.exports = JobSchema

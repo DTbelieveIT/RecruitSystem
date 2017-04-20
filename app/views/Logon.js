@@ -5,7 +5,7 @@ import Button from '../components/Button'
 import Radio from '../components/Radio'
 import EditText from '../components/EditText'
 import {RSAEncrypt} from '../util'
-import {LOGON,ACCOUNT,PASSWORD,PASSWORD_CONFIRM,NAME,PHONE,CLEAR} from '../constants/Const'
+import {LOGON,ACCOUNT,PASSWORD,PASSWORD_CONFIRM,NAME,PHONE,EMAIL,JOB,ADDRESS,SIZE,FOUNDAT,CLEAR} from '../constants/Const'
 import {updateEditText,fetchDataIfNeed} from '../actions'
 
 
@@ -71,6 +71,21 @@ class Logon extends Component{
 			case 'phone':
 				kind += PHONE
 				break
+			case 'email':
+				kind += EMAIL
+				break
+			case 'job':
+				kind += JOB
+				break
+			case 'address':
+				kind += ADDRESS
+				break												
+			case 'size':
+				kind += SIZE
+				break	
+			case 'foundAt':
+				kind += FOUNDAT
+				break								
 		}
 		let parent = child._reactInternalInstance._currentElement._owner._instance
 		parent.props.dispatch(updateEditText(value,kind))
@@ -119,6 +134,11 @@ class Logon extends Component{
         let role = document.querySelectorAll('#role input[type=radio]:checked')[0].value
         let name = document.querySelector('#name').firstChild.value
         let phone = document.querySelector('#phone').firstChild.value
+        let email = document.querySelector('#email').firstChild.value
+        let job = document.querySelector('#job').firstChild.value
+        let address = document.querySelector('#address').firstChild.value
+        let size = document.querySelector('#size').firstChild.value
+        let foundAt = document.querySelector('#foundAt').firstChild.value
 		let dispatch = this._reactInternalInstance._currentElement._owner._instance.props.dispatch
 		dispatch = dispatch === undefined ? this.props.dispatch : dispatch
     	console.log('start logon')
@@ -132,6 +152,11 @@ class Logon extends Component{
     			role,
     			name,
     			phone,
+    			job,
+    			email,
+    			size,
+    			address,
+    			foundAt
     		}
     	}))
 	}
@@ -169,9 +194,17 @@ class Logon extends Component{
 					<Radio options={this.state.radioOption} onChange={this.handleChangeRadio.bind(this)} id="role"/>
 					<div style={{display:this.state.display.role0}}>
 						个人用户
+						<EditText margin=".2rem 0 0 0" value={this.props.name} id="name" type="text" onChange={this.handleChange} placeholder="个人用户姓名" name="name"/>
+						<EditText margin=".2rem 0 0 0" value={this.props.phone} id="phone" type="number" onChange={this.handleChange} placeholder="个人用户手机号码" name="phone"/>
+						<EditText margin=".2rem 0 0 0" value={this.props.email} id="email" type="email" onChange={this.handleChange} placeholder="个人用户邮箱" name="email"/>
+						<EditText margin=".2rem 0 0 0" value={this.props.job} id="job" type="text" onChange={this.handleChange} placeholder="个人用户心仪工作" name="job"/>
 					</div>
 					<div style={{display:this.state.display.role1}}>
 						企业用户的注册资料
+						<EditText margin=".2rem 0 0 0" value={this.props.name} id="name" type="text" onChange={this.handleChange} placeholder="企业用户名称" name="name"/>
+						<EditText margin=".2rem 0 0 0" value={this.props.address} id="address" type="text" onChange={this.handleChange} placeholder="企业用户地址" name="address"/>
+						<EditText margin=".2rem 0 0 0" value={this.props.size} id="size" type="number" onChange={this.handleChange} placeholder="企业用户规模" name="size"/>
+						<EditText margin=".2rem 0 0 0" value={this.props.foundAt} id="foundAt" type="date" onChange={this.handleChange} placeholder="企业用户成立时间" name="foundAt"/>
 					</div>
 					<div style={{display:this.state.display.role2}}>
 						管理员
@@ -193,6 +226,11 @@ Logon.PropTypes = {
 	cpassword:PropTypes.string.isRequired,
 	name:PropTypes.string.isRequired,
 	phone:PropTypes.number.isRequired,
+	email:PropTypes.string.isRequired,
+	job:PropTypes.string.isRequired,
+	address:PropTypes.string.isRequired,
+	size:PropTypes.number.isRequired,
+	foundAt:PropTypes.string.isRequired,
 }
 
 Logon.defaultProps = {
@@ -209,6 +247,11 @@ function mapStateToProps(state){
 		cpassword:state.logonReducer.cpassword,
 		name:state.logonReducer.name,
 		phone:state.logonReducer.phone,
+		email:state.logonReducer.email,
+		job:state.logonReducer.job,
+		address:state.logonReducer.address,
+		size:state.logonReducer.size,
+		foundAt:state.logonReducer.foundAt,
 	}
 }
 

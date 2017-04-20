@@ -4,7 +4,7 @@ import {browserHistory} from 'react-router'
 import Button from '../components/Button'
 import EditText from '../components/EditText'
 import {RSAEncrypt} from '../util'
-import {LOGIN,ACCOUNT,PASSWORD} from '../constants/Const'
+import {LOGIN,ACCOUNT,PASSWORD,CLEAR} from '../constants/Const'
 import {updateEditText,fetchDataIfNeed} from '../actions'
 require('../style/Login.less')
 
@@ -80,6 +80,10 @@ class Login extends Component{
 			console.log('keyboard submit')
 			this.login()
 		}
+	}
+
+	componentWillUnmount(){
+		this.props.dispatch({type:CLEAR})
 	}
 
 	render(){

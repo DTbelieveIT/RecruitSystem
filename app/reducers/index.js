@@ -3,8 +3,15 @@ import {
 	REQUEST_DATA,REQUEST_FAIL,RECEIVE_DATA,
 	LOGIN,LOGON,
 	ACCOUNT,PASSWORD,PASSWORD_CONFIRM,
-	PHONE,NAME,CLEAR
+	PHONE,NAME,EMAIL,JOB,ADDRESS,SIZE,FOUNDAT,
+	CLEAR
 } from '../constants/Const'
+
+let initState = {
+	data:{
+		code:500,
+	}
+}
 
 /**
  * 登录的reducer
@@ -36,16 +43,14 @@ function loginReducer(state={
 			return Object.assign({}, state, {
 				password:action.value,
 			});
+		case CLEAR:
+			return initState			
 		default:
 			return state;
 	}
 }
 
-let initState = {
-	data:{
-		code:500,
-	}
-}
+
 /**
  * 注册的reducer
  */
@@ -87,6 +92,26 @@ function logonReducer(state={
 		case LOGON + NAME:
 			return Object.assign({}, state, {
 				name:action.value,
+			});
+		case LOGON + EMAIL:
+			return Object.assign({}, state, {
+				email:action.value,
+			});
+		case LOGON + JOB:
+			return Object.assign({}, state, {
+				job:action.value,
+			});
+		case LOGON + ADDRESS:
+			return Object.assign({}, state, {
+				address:action.value,
+			});
+		case LOGON + SIZE:
+			return Object.assign({}, state, {
+				size:action.value,
+			});		
+		case LOGON + FOUNDAT:
+			return Object.assign({}, state, {
+				foundAt:action.value,
 			});
 		case CLEAR:
 			return initState

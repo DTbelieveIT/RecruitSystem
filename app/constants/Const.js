@@ -3,6 +3,7 @@ export const RECEIVE_DATA = 'RECEIVE_DATA ';
 export const REQUEST_FAIL = 'REQUEST_FAIL ';
 export const LOGIN = 'LOGIN';
 export const LOGON = 'LOGON';
+export const LOGOUT = 'LOGOUT';
 export const CLEAR = 'CLEAR';
 export const ACCOUNT = ' ACCOUNT';
 export const PASSWORD = ' PASSWORD';

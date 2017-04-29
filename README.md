@@ -13,10 +13,13 @@ nodemon -x babel-node server.js
 ## supervisor
 supervisor -w . -x babel-node -e node,js,html server.js
 
-## 开发时两个命令窗口
+## 生产环境下两个命令窗口
 npm run build: webpack监听打包
-set NODE_ENV=production&&nodemon -x babel-node server.js: nodemon监听node端文件更新
+set NODE_ENV=production&&npm start: nodemon监听node端文件更新
 
+## 开发环境下两个命令行窗口
+set NODE_ENV=dev&&npm start: 开启webpack-dev-server监听打包，转发前端请求到node服务器
+set NODE_ENV=dev&&npm run server: nodemon接收并处理转发的请求
 
 # 问题
 1. css模块化打包，下面组合报错

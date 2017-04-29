@@ -1,6 +1,6 @@
 import React,{Component, PropTypes} from 'react'
 import {connect} from 'react-redux'
-import {browserHistory} from 'react-router'
+import defineHistory from '../history'
 import Button from '../components/Button'
 import EditText from '../components/EditText'
 import {RSAEncrypt} from '../util'
@@ -23,7 +23,7 @@ class Login extends Component{
 		if(nextProps.status === 1){
 			if(nextProps.data.code === 200){
 				alert('login success')		
-				browserHistory.replace('/')
+				defineHistory.replace('/')
 			}else{
 				alert('login fail')
 			}
@@ -46,7 +46,7 @@ class Login extends Component{
 	}
 
 	logon(){
-		browserHistory.push('/logon')
+		defineHistory.push('/logon')
 	}
 
 	login(){
@@ -83,7 +83,7 @@ class Login extends Component{
 	}
 
 	componentWillUnmount(){
-		this.props.dispatch({type:CLEAR})
+		this.props.dispatch({type:LOGIN + CLEAR})
 	}
 
 	render(){

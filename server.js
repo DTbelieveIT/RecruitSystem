@@ -8,7 +8,8 @@ import appConfig from './config/app.config.js'
 
 let isDev = process.env.NODE_ENV !== 'production'
 let port = appConfig.port
-let PORT = process.env.PORT || port
+let portDev = appConfig.portDev
+
 const app = express()
 
 //connect MongoDB
@@ -17,12 +18,6 @@ mongoose.connection.on('error',() => {
 	console.info('Error:Could not connect to MongoDB')
 })
 
-//distinguish env
-if(isDev){
-	console.log('The app is Dev')
-}else{
-	console.log('The app is Production')
-}
 
 /**
  * middleware
@@ -34,12 +29,23 @@ app.use(logger('dev'))
 //parse application/json
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
-//static resource middleware
-app.use(express.static(path.join(__dirname,'build'),{index:'index.html'}))
 
 //process route
 require('./config/routes')(app)
 
-app.listen(PORT,'127.0.0.1',() => {
-	console.log('The app(production) is run at http://localhost:' + PORT)
-})
+//distinguish env
+if(isDev){
+	console.log('The app is Dev')
+	app.listen(portDev,'127.0.0.1',() => {
+		console.log('The app(dev) is run at http://localhost:' + portDev)
+	})
+}else{
+	console.log('The app is Production')
+	//static resource middleware
+	app.use(express.static(path.join(__dirname,'build'),{index:'index.html'}))
+
+	app.listen(port,'127.0.0.1',() => {
+		console.log('The app(production) is run at http://localhost:' + port)
+	})
+}
+

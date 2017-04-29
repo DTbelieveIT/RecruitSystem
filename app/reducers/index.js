@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux'
 import {
 	REQUEST_DATA,REQUEST_FAIL,RECEIVE_DATA,
-	LOGIN,LOGON,
+	LOGIN,LOGON,LOGOUT,
 	ACCOUNT,PASSWORD,PASSWORD_CONFIRM,
 	PHONE,NAME,EMAIL,JOB,ADDRESS,SIZE,FOUNDAT,
 	CLEAR
@@ -43,8 +43,13 @@ function loginReducer(state={
 			return Object.assign({}, state, {
 				password:action.value,
 			});
-		case CLEAR:
-			return initState			
+		case LOGIN + CLEAR:
+			return Object.assign({},initState,{
+				status:state.status,
+				account:state.account
+			});
+		case LOGOUT:
+			return initState
 		default:
 			return state;
 	}
@@ -113,7 +118,7 @@ function logonReducer(state={
 			return Object.assign({}, state, {
 				foundAt:action.value,
 			});
-		case CLEAR:
+		case LOGON + CLEAR:
 			return initState
 		default:
 			return state;

@@ -1,6 +1,6 @@
 import React,{Component,PropTypes} from 'react'
 import {connect} from 'react-redux'
-import {browserHistory} from 'react-router'
+import defineHistory from '../history'
 import Button from '../components/Button'
 import Radio from '../components/Radio'
 import EditText from '../components/EditText'
@@ -172,7 +172,7 @@ class Logon extends Component{
 		if(nextProps.status === 1 && nextProps.data!==undefined){
 			if(nextProps.data.code === 200){
 				alert('logon success')		
-				browserHistory.replace('/login')
+				defineHistory.replace('/login')
 			}else{
 				alert('logon fail')
 			}
@@ -180,7 +180,7 @@ class Logon extends Component{
 	}
 
 	componentWillUnmount(){
-		this.props.dispatch({type:CLEAR})
+		this.props.dispatch({type:LOGON+CLEAR})
 	}
 
 	render(){

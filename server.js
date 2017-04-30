@@ -11,7 +11,6 @@ let port = appConfig.port
 let portDev = appConfig.portDev
 
 const app = express()
-
 //connect MongoDB
 mongoose.connect(appConfig.database)
 mongoose.connection.on('error',() => {

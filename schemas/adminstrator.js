@@ -47,6 +47,16 @@ AdminstratorSchema.statics = {
 			account:account
 		})
 		.exec(cb)
+	},
+	queryAllByAcountId: function (accountId) {
+		return new Promise((resolve, reject ) => {
+			this
+			.find({adminstrator:accountId})
+			.populate('adminstrator')
+			.exec((err, info) => {
+				resolve(info);
+			})
+		})
 	}
 }
 

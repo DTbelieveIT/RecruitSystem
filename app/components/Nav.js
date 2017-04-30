@@ -31,7 +31,7 @@ class Nav extends Component{
 						<div>
 							<Dropdown overlay={menu}>
 						    	<a className="ant-dropdown-link" href="#">
-						      		{this.props.account} <Icon type="down" />
+						      		{this.props.user.account} <Icon type="down" />
 						    	</a>
 						    </Dropdown>
 						</div>
@@ -49,18 +49,18 @@ class Nav extends Component{
 
 Nav.PropTypes = {
 	isLogin:PropTypes.boolean,
-	account:PropTypes.string.isRequired
+	user:PropTypes.object
 }
 
 Nav.defaultProps = {
 	isLogin:false,
-	account:''
+	user:{}
 }
 
 function mapStateToProps(state){
 	return {
 		isLogin:state.loginReducer.status === 1,
-		account:state.loginReducer.account
+		user:state.loginReducer.data.user || {}
 	}
 }
 

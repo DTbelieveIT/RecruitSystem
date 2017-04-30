@@ -14,8 +14,8 @@ var portDev = appConfig.portDev
 
 module.exports = {
   entry:{
-    main:[path.resolve(__dirname,'../app/index.js'),path.resolve(__dirname,'../app/views/Logon.js')],
-    vendor:['react','react-dom'],
+    main:[path.resolve(__dirname,'../app/index.js'),path.resolve(__dirname,'../app/views/Logon.js'),path.resolve(__dirname,'../app/views/Login.js')],
+    vendor:['react','react-dom','react-router','antd']
   },
   output:{
     path:path.resolve(__dirname,'../build'),
@@ -50,7 +50,7 @@ module.exports = {
         use:{
           loader:'babel-loader',
           options:{
-            presets:['es2015','react']
+            presets:['es2015','react','stage-0']
           }
         }
       }

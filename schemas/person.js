@@ -31,4 +31,31 @@ let PresonSchema = new mongoose.Schema({
 	}
 })
 
+PresonSchema.statics = {
+	fetch:function(cb){
+		return this
+		.find({})
+		.sort('meta.updateAt')
+		.exec(cb)
+	},
+	findById:function(id,cb){
+		return this
+		.findOne({
+			_id:id
+		})
+		.exec(cb)
+	},
+	queryAllByAcountId: function (accountId) {
+		return new Promise((resolve, reject ) => {
+			this
+			.find({person:accountId})
+			.populate('person')
+			.populate('resume.job')
+			.exec((err, info) => {
+				resolve(info);
+			})
+		})
+	}
+}
+
 module.exports = PresonSchema

@@ -24,4 +24,30 @@ let CompanySchema = new mongoose.Schema({
 	}
 })
 
+CompanySchema.statics = {
+	fetch:function(cb){
+		return this
+		.find({})
+		.sort('meta.updateAt')
+		.exec(cb)
+	},
+	findById:function(id,cb){
+		return this
+		.findOne({
+			_id:id
+		})
+		.exec(cb)
+	},
+	queryAllByAcountId: function (accountId) {
+		return new Promise((resolve, reject ) => {
+			this
+			.find({person:accountId})
+			.populate('company')
+			.exec((err, info) => {
+				resolve(info);
+			})
+		})
+	}
+}
+
 module.exports = CompanySchema

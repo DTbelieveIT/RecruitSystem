@@ -115,10 +115,11 @@ exports.signup = (req,res) => {
 	})
 }
 
-exports.signin = (req,res) => {
+exports.signin = async (req,res) => {
 	let _user = req.body
 	let {account,password} = _user
-	User.findOne({
+	let data
+	await User.findOne({
 		account:account
 	},function(err,user){
 		if(err){
@@ -127,15 +128,44 @@ exports.signin = (req,res) => {
 		if(!user){
 			return res.send({result:'user not exist'})
 		}
-
-		let decrypted = RSADecrypt(password)
-		
-		if(decrypted === user.password){
-			console.log('password is match')
-			return res.send({code:200})
-		}else{
-			console.log('password is not match')
-			return res.send({result:'login fail'})
-		}
+		data = user
 	})
+	let decrypted = RSADecrypt(password)	
+	if(decrypted === data.password){
+		console.log('password is match')
+		if(data.role === 0){
+			let personInfo = await Person.queryAllByAcountId(data._id)
+			return res.send({code:200,info:personInfo[0],user:data})
+		}else if(data.role === 1){
+			let companyInfo = await Company.queryAllByAcountId(data._id)
+			return res.send({code:200,info:companyInfo[0],user:data})
+		}else if(data.role === 2){
+			let adminstratorInfo = await Adminstrator.queryAllByAcountId(data._id)
+			return res.send({code:200,info:adminstratorInfo[0],user:data})
+		}
+	}else{
+		console.log('password is not match')
+		return res.send({result:'login fail'})
+	}
+}
+
+exports.updateInfo = async (req,res) => {
+	let account = req.body.account
+	let user = await User.findByName(account)
+	let person = await Person.queryAllByAcountId(user._id)
+	user.password='gdt'
+	await user.save(function(err,user){
+		if(err) console.log(err)
+		console.log(user)
+	})
+	person[0].resume.name = '我修改了'
+	await person[0].save(function(err,person){
+		if(err) console.log(err)
+		console.log(person)
+	})
+	res.send({code:200})
+}
+
+exports.test  = (req,res) => {
+	res.send({result:'test'})
 }

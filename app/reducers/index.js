@@ -4,7 +4,8 @@ import {
 	LOGIN,LOGON,LOGOUT,
 	ACCOUNT,PASSWORD,PASSWORD_CONFIRM,
 	PHONE,NAME,EMAIL,JOB,ADDRESS,SIZE,FOUNDAT,
-	CLEAR
+	CLEAR,
+	SETTING
 } from '../constants/Const'
 
 let initState = {
@@ -44,9 +45,9 @@ function loginReducer(state={
 				password:action.value,
 			});
 		case LOGIN + CLEAR:
-			return Object.assign({},initState,{
-				status:state.status,
-				account:state.account
+			return Object.assign({},state,{
+				account:'',
+				password:''
 			});
 		case LOGOUT:
 			return initState
@@ -125,7 +126,37 @@ function logonReducer(state={
 	}
 }
 
+/**
+ * 信息设置的reducer
+ */
+ function settingReducer(state={
+	data:{
+		code:500,
+	},
+},action){
+	switch (action.type) {
+		case REQUEST_DATA + SETTING:
+			return Object.assign({}, state, {
+				status: 0
+			});
+		case RECEIVE_DATA + SETTING:
+			return Object.assign({}, state, {
+				data: action.data,
+				status: 1,
+			});
+		case REQUEST_FAIL + SETTING:
+			return Object.assign({}, state, {
+				status: -1
+			});
+		case SETTING + CLEAR:
+			return initState
+		default:
+			return state;
+	}
+}
+
 export default combineReducers({
 	loginReducer,
 	logonReducer,
+	settingReducer,
 })

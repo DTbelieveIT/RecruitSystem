@@ -1,9 +1,10 @@
 {
-  "presets": [
-    'es2015'
-  ],
-  "plugins": [["import", {
-  	"libraryName": "antd",
-  	"style": true,
-  }]]
+  "presets":['es2015','stage-0'],
+  "plugins": [
+  	["import", {
+  		"libraryName": "antd",
+  		"style": true,
+  	}],
+  	"transform-async-to-generator",
+  ]
 }

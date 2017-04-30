@@ -41,7 +41,7 @@ CompanySchema.statics = {
 	queryAllByAcountId: function (accountId) {
 		return new Promise((resolve, reject ) => {
 			this
-			.find({person:accountId})
+			.findOne({company:accountId})
 			.populate('company')
 			.exec((err, info) => {
 				resolve(info);

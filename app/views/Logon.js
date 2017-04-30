@@ -106,9 +106,9 @@ class Logon extends Component{
 
 	fillInfo(){
 		console.log('fill infomation')
-		let account = document.querySelector('#account').firstChild.value
-        let password = document.querySelector('#password').firstChild.value
-        let cpassword = document.querySelector('#cpassword').firstChild.value
+		let account = this.props.account
+        let password = this.props.password
+        let cpassword = this.props.cpassword
         let role = document.querySelectorAll('#role input[type=radio]:checked')[0].value
         console.log(role)
         if(this.checkInput(account,password,cpassword)){
@@ -128,17 +128,17 @@ class Logon extends Component{
 
 	logon(){
 		console.log('logon')
-		let account = document.querySelector('#account').firstChild.value
-        let password = document.querySelector('#password').firstChild.value
-        let cpassword = document.querySelector('#cpassword').firstChild.value
+		let account = this.props.account
+        let password = this.props.password
+        let cpassword = this.props.cpassword
         let role = document.querySelectorAll('#role input[type=radio]:checked')[0].value
-        let name = document.querySelector('#name').firstChild.value
-        let phone = document.querySelector('#phone').firstChild.value
-        let email = document.querySelector('#email').firstChild.value
-        let job = document.querySelector('#job').firstChild.value
-        let address = document.querySelector('#address').firstChild.value
-        let size = document.querySelector('#size').firstChild.value
-        let foundAt = document.querySelector('#foundAt').firstChild.value
+        let name = this.props.name
+        let phone = this.props.phone
+        let email = this.props.email
+        let job = this.props.job
+        let address = this.props.address
+        let size = this.props.size
+        let foundAt = this.props.foundAt
 		let dispatch = this._reactInternalInstance._currentElement._owner._instance.props.dispatch
 		dispatch = dispatch === undefined ? this.props.dispatch : dispatch
     	console.log('start logon')

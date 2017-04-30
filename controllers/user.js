@@ -4,145 +4,115 @@ import Person from '../models/person'
 import Company from '../models/company'
 import Job from '../models/job'
 import {RSADecrypt} from '../tools/RSADecrypt'
+import _ from 'underscore'
 let roles = ['person','company','adminstrator']
 
-exports.signup = (req,res) => {
+exports.signup = async (req,res) => {
 	let userObject = req.body
-	User.findOne({
-		account:userObject.account
-	},function(err,user){
+	let user = await User.findOne({account:userObject.accout})
+	if(user){
+		return res.send({result:'account existed!'})
+	}
+	userObject.password = RSADecrypt(userObject.password)
+	let _user = new User(userObject)
+	await _user.save(function(err,user){
 		if(err){
 			console.log(err)
 		}
-		if(user){
-			return res.send({result:'account existed!'})
-		}else{
-			userObject.password = RSADecrypt(userObject.password)
-			let _user = new User(userObject)
-			_user.save(function(err,user){
+		_user = user
+	})
+	let userObj
+	switch(roles[_user.role]){
+		case 'person':
+			console.log('person')
+			let resume = {
+				name:userObject.name,
+				phone:userObject.phone,
+				email:userObject.email,
+			}
+			let job,jobObj
+			job = await Job.findOne({name:userObject.job})
+			if(!job){
+				jobObj = new Job({name:userObject.job})
+				job = await jobObj.save()
+			}
+			resume.job = job._id
+			userObj = new Person({
+				person:_user._id,
+				resume:resume
+			})
+			await userObj.save(function(err,person){
 				if(err){
 					console.log(err)
 				}
-				let userRole=null, userObj = null
-				switch(roles[user.role]){
-					case 'person':
-						console.log('person')
-						let resume = {}
-						let jobObj = null
-						resume = {
-							name:userObject.name,
-							phone:userObject.phone,
-							email:userObject.email,
-						}
-						Job.findOne({name:userObject.job},function(err,job){
-							if(err){
-								console.log(err)
-							}
-							if(!job){
-								jobObj = new Job({name:userObject.job})
-								jobObj.save(function(err,job){
-									if(err) console.log(err)
-									resume.job = jobObj._id
-									userObj = new Person({
-										person:user._id,
-										resume:resume
-									})					
-									userObj.save(function(err,user){					
-										if(err){
-											console.log(err)	
-										} 
-										console.log('logon success')
-										return res.send({code:200})
-									})
-								})
-							}else{
-								resume.job = job._id
-								userObj = new Person({
-									person:user._id,
-									resume:resume
-								})					
-								userObj.save(function(err,user){					
-									if(err){
-										console.log(err)	
-									} 
-									console.log('logon success')
-									return res.send({code:200})
-								})
-							}
-
-						})
-						userRole = 'person'
-						break
-					case 'company':
-						console.log('company')					
-						userObj = new Company({
-							company:user._id,
-							name:userObject.name,
-							address:userObject.address,
-							size:userObject.size,
-							foundAt:userObject.foundAt
-						})							
-						userRole = 'company'
-						userObj.save(function(err,user){					
-							if(err){
-								console.log(err)	
-							} 
-							console.log('logon success')
-							return res.send({code:200})
-						})	
-						break
-					case 'adminstrator':
-						console.log('adminstrator')
-						userObj = new Adminstrator({
-							adminstrator:user._id,
-							name:userObject.name,
-							phone:userObject.phone
-						})
-						userRole = 'adminstrator'
-						userObj.save(function(err,user){					
-							if(err){
-								console.log(err)	
-							} 
-							console.log('logon success')
-							return res.send({code:200})
-						})
-						break
-					default:
-						throw new Error('illegal role')	
-				}
+				console.log('logon success!')
+				return res.send({code:200})
 			})
-		}
-	})
+			break
+		case 'company':
+			console.log('company')
+			userObj = new Company({
+				company:_user._id,
+				name:userObject.name,
+				address:userObject.address,
+				size:userObject.size,
+				foundAt:userObject.foundAt
+			})
+			await userObj.save(function(err,company){
+				if(err){
+					console.log(err)
+				}
+				console.log('logon success!')
+				return res.send({code:200})
+			})
+			break
+		case 'adminstrator':
+			console.log('adminstrator')
+			userObj = new Adminstrator({
+				adminstrator:_user._id,
+				name:userObject.name,
+				phone:userObject.phone
+			})
+			await userObj.save(function(err,adminstrator){
+				if(err){
+					console.log(err)
+				}
+				console.log('logon success!')
+				return res.send({code:200})
+			})
+			break
+		default:
+			throw new Error('illegal role!')
+	}
 }
 
 exports.signin = async (req,res) => {
 	let _user = req.body
 	let {account,password} = _user
 	let data
+	let info
 	await User.findOne({
 		account:account
 	},function(err,user){
 		if(err){
 			console.log(err)
 		}
-		if(!user){
-			return res.send({result:'user not exist'})
-		}
-		data = user
+		_user = user
 	})
+	if(!_user){
+		return res.send({result:'user not exist'})
+	}
 	let decrypted = RSADecrypt(password)	
-	if(decrypted === data.password){
+	if(decrypted === _user.password){
 		console.log('password is match')
-		if(data.role === 0){
-			let personInfo = await Person.queryAllByAcountId(data._id)
-			return res.send({code:200,info:personInfo[0],user:data})
-		}else if(data.role === 1){
-			let companyInfo = await Company.queryAllByAcountId(data._id)
-			return res.send({code:200,info:companyInfo[0],user:data})
-		}else if(data.role === 2){
-			let adminstratorInfo = await Adminstrator.queryAllByAcountId(data._id)
-			return res.send({code:200,info:adminstratorInfo[0],user:data})
+		if(_user.role === 0){
+			info = await Person.queryAllByAcountId(_user._id)
+		}else if(_user.role === 1){
+			info = await Company.queryAllByAcountId(_user._id)
+		}else if(_user.role === 2){
+			info = await Adminstrator.queryAllByAcountId(_user._id)
 		}
+		return res.send({code:200,info:info,user:_user})
 	}else{
 		console.log('password is not match')
 		return res.send({result:'login fail'})
@@ -150,20 +120,37 @@ exports.signin = async (req,res) => {
 }
 
 exports.updateInfo = async (req,res) => {
-	let account = req.body.account
+	let info = req.body
+	let account = info.account
 	let user = await User.findByName(account)
-	let person = await Person.queryAllByAcountId(user._id)
-	user.password='gdt'
-	await user.save(function(err,user){
-		if(err) console.log(err)
-		console.log(user)
-	})
-	person[0].resume.name = '我修改了'
-	await person[0].save(function(err,person){
-		if(err) console.log(err)
-		console.log(person)
-	})
-	res.send({code:200})
+	let newInfo
+	if(info.password !== undefined){
+		user.password = info.password
+		user = await user.save()
+	}
+	if(user.role === 0){
+		let _job = await Job.findOne({name:info.resume.job.name},function(err,job){
+			if(err) console.log(err)
+		})
+		if(!_job){
+			_job = new Job({name:info.resume.job.name})
+			_job = await _job.save()
+		}
+		info.resume.job._id = _job._id
+		info.resume.job.name = _job.name
+		let personOldInfo = await Person.queryAllByAcountId(user._id)
+		let personInfo = _.extend(personOldInfo,info)
+		newInfo = await personInfo.save()
+	}else if(user.role === 1){
+		let companyOldInfo  = await Company.queryAllByAcountId(user._id)
+		let companyInfo = _.extend(companyOldInfo,info)
+		newInfo = await companyInfo.save()
+	}else if(user.role === 2){
+		let adminstratorOldInfo = await Adminstrator.queryAllByAcountId(user._id)
+		let adminstratorInfo = _.extend(adminstratorOldInfo,info)
+		newInfo = await adminstratorInfo.save()
+	}
+	res.send({code:200,info:newInfo,user:user})
 }
 
 exports.test  = (req,res) => {

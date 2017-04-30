@@ -18,6 +18,4 @@ export const JOB = 'JOB';
 export const ADDRESS = 'ADDRESS';
 export const SIZE = 'SIZE';
 export const FOUNDAT = 'FOUNDAT';
-
-//setting
-export const SETTING = 'SETTING';
+export const UPDATEINFO = 'UPDATEINFO';

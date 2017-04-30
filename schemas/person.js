@@ -48,7 +48,7 @@ PresonSchema.statics = {
 	queryAllByAcountId: function (accountId) {
 		return new Promise((resolve, reject ) => {
 			this
-			.find({person:accountId})
+			.findOne({person:accountId})
 			.populate('person')
 			.populate('resume.job')
 			.exec((err, info) => {

@@ -19,3 +19,9 @@ export const ADDRESS = 'ADDRESS';
 export const SIZE = 'SIZE';
 export const FOUNDAT = 'FOUNDAT';
 export const UPDATEINFO = 'UPDATEINFO';
+
+//recruitment
+export const ADDRECRUITMENT = 'ADDRECRUITMENT';
+export const QUERYJOBLIST = 'QUERYJOBLIST';
+export const RECRUITMENTLIST = 'RECRUITMENTLIST';
+

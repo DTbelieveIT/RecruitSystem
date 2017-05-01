@@ -45,6 +45,24 @@ const Setting = (location,callback) => {
 	},'Setting')
 }
 
+const AddRecruitment = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/AddRecruitment'))
+	},'AddRecruitment')
+}
+
+const RecruitmentList = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/RecruitmentList'))
+	},'RecruitmentList')
+}
+
+const RecruitmentDetail = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/RecruitmentDetail'))
+	},'RecruitmentDetail')
+}
+
 render((
 	<Provider store={store}>
 		<Router history={defineHistory}>
@@ -56,6 +74,9 @@ render((
 			<Route path="login" getComponent={Login}/>
 			<Route path="logon" getComponent={Logon}/>
 			<Route path="setting" getComponent={Setting}/>
+			<Route path="addRecruitment" getComponent={AddRecruitment}/>
+			<Route path="recruitmentList" getComponent={RecruitmentList}/>
+			<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
 		</Router>
 	</Provider>
 ),document.getElementById('app'))

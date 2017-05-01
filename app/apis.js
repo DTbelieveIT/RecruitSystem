@@ -20,14 +20,10 @@ let data = {
 
 export default function(params){
 	if(params.requests.length > 1){
-		alert('fetchAllData')
 		fetchAllData(params)
-		// fetchAllData(params)
 	}else{
-		alert('fetchData')
 		switch(params.requests[0].method){
 			case 'GET':
-				console.log(params)
 				params.requests[0].query = params.requests[0].query === undefined ? '' : ('?' + dictToString(params.requests[0].query))
 				return fetchData(params,Object.assign({},{
 					method:params.requests[0].method

@@ -5,7 +5,8 @@ import {
 	ACCOUNT,PASSWORD,PASSWORD_CONFIRM,
 	PHONE,NAME,EMAIL,JOB,ADDRESS,SIZE,FOUNDAT,
 	CLEAR,
-	UPDATEINFO
+	UPDATEINFO,
+	QUERYJOBLIST,ADDRECRUITMENT,RECRUITMENTLIST
 } from '../constants/Const'
 
 let initState = {
@@ -143,8 +144,75 @@ function logonReducer(state={
 	}
 }
 
+/**
+ * 招聘的reducer
+ */
+ function recruitmentReducer(state={},action){
+	switch (action.type) {
+		case REQUEST_DATA + ADDRECRUITMENT:
+			return Object.assign({}, state, {
+				status: 0
+			});
+		case RECEIVE_DATA + ADDRECRUITMENT:
+			return Object.assign({}, state, {
+				data: action.data,
+				status: 1,
+			});
+		case REQUEST_FAIL + ADDRECRUITMENT:
+			return Object.assign({}, state, {
+				status: -1
+			});
+		case ADDRECRUITMENT + CLEAR:
+			return {}
+		case REQUEST_DATA + RECRUITMENTLIST:
+			return Object.assign({}, state, {
+				status: 0
+			});
+		case RECEIVE_DATA + RECRUITMENTLIST:
+			return Object.assign({}, state, {
+				data: action.data,
+				status: 1,
+			});
+		case REQUEST_FAIL + RECRUITMENTLIST:
+			return Object.assign({}, state, {
+				status: -1
+			});			
+		case RECRUITMENTLIST + CLEAR:
+			return Object.assign({},state,{
+				status: 0
+			})					
+		default:
+			return state;
+	}
+}
+
+
+/**
+ * 工作的reducer
+ */
+ function jobReducer(state={},action){
+	switch (action.type) {
+		case REQUEST_DATA + QUERYJOBLIST:
+			return Object.assign({}, state, {
+				status: 0
+			});
+		case RECEIVE_DATA + QUERYJOBLIST:
+			return Object.assign({}, state, {
+				data: action.data,
+				status: 1,
+			});
+		case REQUEST_FAIL + QUERYJOBLIST:
+			return Object.assign({}, state, {
+				status: -1
+			});
+		default:
+			return state;
+	}
+}
 
 export default combineReducers({
 	loginReducer,
 	logonReducer,
+	recruitmentReducer,
+	jobReducer
 })

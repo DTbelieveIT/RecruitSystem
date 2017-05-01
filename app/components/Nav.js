@@ -23,6 +23,8 @@ class Nav extends Component{
 			<div className='main'>
 				<div className='left'>
 					<Link to="/">首页</Link>{' '}
+					<Link to="/addRecruitment">发布招聘信息</Link>{' '}
+					<Link to="/recruitmentList">查看招聘信息</Link>{' '}
 					<Link to="/company">公司</Link>{' '}
 					<Link to="/experience">面经</Link>
 				</div>

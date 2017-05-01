@@ -1,8 +1,6 @@
 import {
 	REQUEST_DATA,REQUEST_FAIL,RECEIVE_DATA,
-	LOGIN,LOGON,
-	ACCOUNT,PASSWORD,PASSWORD_CONFIRM,
-	CODE,CODE_TIMER
+	LOGIN,LOGON
 } from '../constants/Const'
 import api from '../apis'
 
@@ -28,7 +26,6 @@ export function fetchDataIfNeed(...requests){
 * 判断是否需要获取数据，若需要则返回true
 */
 function shouldFetchData(state,requests,dispatch){
-	console.log(requests)
 	switch(requests[0].category){
 		case LOGIN:
 			break

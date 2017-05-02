@@ -29,7 +29,12 @@ RecruitmentSchema.statics = {
 		return new Promise((resolve,reject) => {
 			this
 			.find({})
-			.populate('company')
+			.populate({
+				path:'company',
+				populate:{
+					path:'company'
+				}
+			})
 			.populate('job')
 			.populate('person')
 			.exec((err,info) => {

@@ -18,7 +18,6 @@ class RecruitmentDetail extends React.Component {
 
   render() {
   	const {company,job,person,detail,recruitNum,salary,educationRequire,meta} = this.props.info
-  	const {imgPath} = this.props.user
     return (
 	  <div style={{ background: '#ECECEC', padding: '30px' }}>
 	    <Card title={`${job.name}(${company.address})`} bordered={false} style={{ width: '100%',height:400 }}>
@@ -31,7 +30,7 @@ class RecruitmentDetail extends React.Component {
 		    <p>学历要求:{educationRequire===0?'不限':(educationRequire===1?'专科':'本科或本科以上')}</p>	      
 		    <p>工作内容及要求:{detail}</p>
 		    <p>创建时间:{moment(meta.createAt).format('YYYY-MM-DD')}</p>
-		    <img src={imgPath} alt="" style={{  width: 150,height: 150}} />
+		    <img src={company.company.imgPath} alt="" style={{  width: 150,height: 150}} />
 		    <Button type="primary" onClick={this.handleClick}>投个简历</Button>
 	    </Card>
 	  </div>
@@ -47,7 +46,6 @@ function mapStateToProps(state,ownProps){
 	})
 	return {
 		info:info[0] || {},
-		user:state.loginReducer.data.user
 	}
 }
 

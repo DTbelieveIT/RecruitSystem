@@ -3,32 +3,15 @@ import {connect} from 'react-redux'
 import {fetchDataIfNeed} from '../actions'
 import {UPDATEINFO,CLEAR} from '../constants/Const'
 import defineHistory from '../history'
-import Avatar from '../components/Avatar'
+import AvatarImg from '../components/AvatarImg'
+import AvatarFile from '../components/AvatarFile'
 import moment from 'moment'
-import { Upload,Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button ,message} from 'antd'
-import '../style/Avatar.less'
+import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button} from 'antd'
+import appConfig from '../../config/app.config.js'
 import VSetting from '../virtual_data/Setting'
 
-const FormItem = Form.Item;
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(file) {
-  const isJPG = file.type === 'image/jpeg';
-  if (!isJPG) {
-    message.error('You can only upload JPG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJPG && isLt2M;
-}
-
+const FormItem = Form.Item
+const uploadUrlLen = appConfig.upload.file.uploadUrl.length
 
 class UpdateInfoForm extends React.Component {
 	constructor(props){
@@ -36,16 +19,8 @@ class UpdateInfoForm extends React.Component {
 	  	this.state = {
 	    	confirmDirty: false,
 	    	changePassword:false,
-        imageUrl:props.user.imgPath
 	  	};
 	}
-
-  handleChange = (info) => {
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl }));
-    }
-  }
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -69,6 +44,14 @@ class UpdateInfoForm extends React.Component {
       return e;
     }
     return e && e.file;
+  }
+
+  normFileList = (e) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
   }
 
   changePassword = () => {
@@ -135,6 +118,13 @@ class UpdateInfoForm extends React.Component {
         },
       },
     };
+
+    //已经上传的简历和作品
+    const resume = this.props.person && this.props.person.resume.path.map(function(path){
+      return (
+        <li><a href={path} target="_blank" >{path.substring(uploadUrlLen+1)}</a></li>
+      )
+    })
 
     return (
       <div>
@@ -247,26 +237,32 @@ class UpdateInfoForm extends React.Component {
             {...formItemLayout}
             label="更改个人头像"
           >
-            {getFieldDecorator('file', {
-              valuePropName: 'file',
-              getValueFromEvent: this.normFile,
+            {getFieldDecorator('img', {
+              valuePropName: 'img',
+              getValueFromEvent: this.normFile
             })(
-            <Upload
-              className="avatar-uploader"
-              name="avatar"
-              showUploadList={false}
-              action="/file/upload"
-              beforeUpload={beforeUpload}
-              onChange={this.handleChange}
-            >
-              {
-                imageUrl === '/default.png' ?
-                  <img src='/default.png' alt="" className="avatar" /> :
-                  <img src={imageUrl} alt="" className="avatar" />
-              }
-            </Upload>
+              <AvatarImg imageUrl='/default.png' action="/file/upload" user={this.props.user} onChange={()=>{}} />
             )}
-          </FormItem>                               
+          </FormItem> 
+          <FormItem
+            {...formItemLayout}
+            label="上传个人简历和作品"
+          >
+            {getFieldDecorator('files', {
+              valuePropName: 'files',
+              getValueFromEvent: this.normFileList
+            })(
+              <AvatarFile  action="/file/upload"  onChange={()=>{}} />
+            )}
+          </FormItem>  
+          {this.props.person.resume.path && this.props.person.resume.path.length !== 0 ? 
+          <FormItem
+            {...formItemLayout}
+            label="已上传的文件"
+          >
+             <ol>{resume}</ol>                                       
+          </FormItem> 
+           : ''}
           <FormItem {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit" size="large">修改个人信息</Button>
           </FormItem>
@@ -376,24 +372,11 @@ class UpdateInfoForm extends React.Component {
             {...formItemLayout}
             label="更改企业头像"
           >
-            {getFieldDecorator('file', {
-              valuePropName: 'file',
-              getValueFromEvent: this.normFile,
+            {getFieldDecorator('img', {
+              valuePropName: 'img',
+              getValueFromEvent: this.normFile
             })(
-            <Upload
-              className="avatar-uploader"
-              name="avatar"
-              showUploadList={false}
-              action="/file/upload"
-              beforeUpload={beforeUpload}
-              onChange={this.handleChange}
-            >
-              {
-                imageUrl === '/default.png' ?
-                  <img src='/default.png' alt="" className="avatar" /> :
-                  <img src={imageUrl} alt="" className="avatar" />
-              }
-            </Upload>
+              <AvatarImg imageUrl='/default.png' action="/file/upload" user={this.props.user} onChange={()=>{}} />
             )}
           </FormItem>           
           <FormItem {...tailFormItemLayout}>

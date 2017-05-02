@@ -12,7 +12,7 @@ let port = appConfig.port
 let portDev = appConfig.portDev
 
 const app = express()
-upload.configure(appConfig.upload.img);
+upload.configure(appConfig.upload.file);
 
 //connect MongoDB
 mongoose.connect(appConfig.database)

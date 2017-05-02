@@ -4,7 +4,7 @@ module.exports = {
 	portDev: 9000,
 	//图片上传配置
 	upload: {
-		img: {
+		file: {
 			uploadDir: __dirname+'/../public/uploads',
 			uploadUrl: '/uploads',
 			imageVersions: {

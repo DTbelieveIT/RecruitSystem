@@ -127,10 +127,9 @@ exports.updateInfo = async (req,res) => {
 	let info = req.body
 	let account = info.account
 	//头像上传成功即更新用户imgPath
-	if(info.file&&info.file.status === 'done'){
-		let imgName = info.file.response.files[0].name
-		let result = await User.update({account:account},{$set:{imgPath:path.join(upload.img.uploadUrl,imgName)}})
-		console.log(result)
+	if(info.img && info.img.status === 'done'){
+		let imgName = info.img.response.files[0].name
+		let result = await User.update({account:account},{$set:{imgPath:path.join(upload.file.uploadUrl,imgName)}})
 	}
 
 	let user = await User.findByName(account)
@@ -142,6 +141,7 @@ exports.updateInfo = async (req,res) => {
 	}
 
 	if(user.role === 0){
+
 		//普通用户更新信息
 		let _job = await Job.findOne({name:info.resume.job.name},function(err,job){
 			if(err) console.log(err)
@@ -153,6 +153,13 @@ exports.updateInfo = async (req,res) => {
 		info.resume.job._id = _job._id
 		info.resume.job.name = _job.name
 		let personOldInfo = await Person.queryAllByAcountId(user._id)
+		
+		//简历和作品上传即更新旧Person的path
+		if(info.files && _.every(info.files,function(file){return file.status === 'done'})){
+			let resumePath = _.map(info.files,function(file){return path.join(upload.file.uploadUrl,file.response.files[0].name)})
+			info.resume.path = [...personOldInfo.resume.path,...resumePath]
+		}
+
 		let personInfo = _.extend(personOldInfo,info)
 		newInfo = await personInfo.save()
 	}else if(user.role === 1){

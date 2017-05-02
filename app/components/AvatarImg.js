@@ -1,6 +1,6 @@
 import { Upload, Icon, message } from 'antd';
-import React from 'react';
-require('../style/Avatar.less')
+import React,{ Component , PropTypes} from 'react'
+require('../style/AvatarImg.less')
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -20,11 +20,17 @@ function beforeUpload(file) {
   return isJPG && isLt2M;
 }
 
-class Avatar extends React.Component {
-  state = {};
+class AvatarImg extends React.Component {
+  constructor(props){
+    super(props)
+      this.state = {
+        imageUrl:props.user.imgPath
+      };
+  }  
 
   handleChange = (info) => {
     if (info.file.status === 'done') {
+      this.props.onChange(info)
       // Get this url from response in real world.
       getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl }));
     }
@@ -37,19 +43,25 @@ class Avatar extends React.Component {
         className="avatar-uploader"
         name="avatar"
         showUploadList={false}
-        action="/file/upload"
+        action={this.props.action}
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
       >
         {
-          imageUrl ?
-            <img src={imageUrl} alt="" className="avatar" /> :
-            <Icon type="plus" className="avatar-uploader-trigger" />
+          imageUrl === this.props.imageUrl ?
+            <img src={this.props.imageUrl} alt="默认头像" className="avatar" /> :
+            <img src={imageUrl} alt="用户头像" className="avatar" />
         }
       </Upload>
     );
   }
 }
 
+AvatarImg.PropTypes = {
+  imageUrl:PropTypes.string.isRequired,
+  onChange:PropTypes.func.isRequired,
+  action:PropTypes.string.isRequired,
+  user:PropTypes.object.isRequired
+}
 
-export default Avatar
+export default AvatarImg

@@ -5,10 +5,7 @@ let ObjectId = Schema.Types.ObjectId
 let PresonSchema = new mongoose.Schema({
 	person:{type:ObjectId,ref:'User'},
 	resume:{
-		path:{
-			type:String,
-			default:''
-		},
+		path:[{type:String,default:''}],
 		name:String,
 		sex:String,
 		birthday:Date,

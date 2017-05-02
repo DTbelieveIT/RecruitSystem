@@ -6,7 +6,7 @@ import EditText from '../components/EditText'
 import {RSAEncrypt} from '../util'
 import {LOGIN,ACCOUNT,PASSWORD,CLEAR} from '../constants/Const'
 import {updateEditText,fetchDataIfNeed} from '../actions'
-require('../style/Login.less')
+import '../style/Login.less'
 
 class Login extends Component{
 	constructor(props){

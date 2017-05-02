@@ -14,7 +14,7 @@ var portDev = appConfig.portDev
 
 module.exports = {
   entry:{
-    main:[path.resolve(__dirname,'../app/index.js'),path.resolve(__dirname,'../app/views/Logon.js'),path.resolve(__dirname,'../app/views/Login.js')],
+    main:path.resolve(__dirname,'../app/index.js'),
     vendor:['react','react-dom','react-router','antd']
   },
   output:{
@@ -42,7 +42,10 @@ module.exports = {
       },
       {
         test:/\.less$/,
-        use:extractLess.extract(['css-loader', 'less-loader'])
+        use:extractLess.extract({
+          fallback:'style-loader',
+          use:['css-loader', 'less-loader']
+        })
       },
       {
         test:/\.js$/,

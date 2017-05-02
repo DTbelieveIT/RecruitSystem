@@ -7,6 +7,10 @@ let UserSchema = new mongoose.Schema({
 	},
 	password:String,
 	role:Number,//0：个人用户，1：企业用户，2：管理员
+	imgPath:{
+		type:String,
+		default:'/default.png'
+	},
 	meta: {
 	    createAt: {
 	      type: Date,

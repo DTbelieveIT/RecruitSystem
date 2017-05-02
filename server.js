@@ -5,12 +5,15 @@ import bodyParser from 'body-parser'
 import logger from 'morgan'
 import mongoose from 'mongoose'
 import appConfig from './config/app.config.js'
+import upload from 'jquery-file-upload-middleware'
 
 let isDev = process.env.NODE_ENV !== 'production'
 let port = appConfig.port
 let portDev = appConfig.portDev
 
 const app = express()
+upload.configure(appConfig.upload.img);
+
 //connect MongoDB
 mongoose.connect(appConfig.database)
 mongoose.connection.on('error',() => {
@@ -25,9 +28,12 @@ mongoose.connection.on('error',() => {
 app.use(compression())
 //log middleware
 app.use(logger('dev'))
+//file upload
+app.use('/file/upload', upload.fileHandler())
 //parse application/json
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
+app.use(express.static(path.join(__dirname,'public')))
 
 //process route
 require('./config/routes')(app)

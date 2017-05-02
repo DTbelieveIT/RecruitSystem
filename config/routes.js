@@ -1,6 +1,7 @@
 //controllers
 import User from '../controllers/user'
 import Recruitment from '../controllers/recruitment'
+import File from '../controllers/file'
 
 module.exports = function(app){
 	//User

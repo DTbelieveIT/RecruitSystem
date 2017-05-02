@@ -5,7 +5,11 @@ import Company from '../models/company'
 import Job from '../models/job'
 import {RSADecrypt} from '../tools/RSADecrypt'
 import _ from 'underscore'
+import appConfig from '../config/app.config'
+import path from 'path'
+
 let roles = ['person','company','adminstrator']
+let {upload} = appConfig
 
 exports.signup = async (req,res) => {
 	let userObject = req.body
@@ -122,13 +126,23 @@ exports.signin = async (req,res) => {
 exports.updateInfo = async (req,res) => {
 	let info = req.body
 	let account = info.account
+	//头像上传成功即更新用户imgPath
+	if(info.file&&info.file.status === 'done'){
+		let imgName = info.file.response.files[0].name
+		let result = await User.update({account:account},{$set:{imgPath:path.join(upload.img.uploadUrl,imgName)}})
+		console.log(result)
+	}
+
 	let user = await User.findByName(account)
 	let newInfo
+	//判断是否有修改密码，有则更新User的密码
 	if(info.password !== undefined){
 		user.password = info.password
 		user = await user.save()
 	}
+
 	if(user.role === 0){
+		//普通用户更新信息
 		let _job = await Job.findOne({name:info.resume.job.name},function(err,job){
 			if(err) console.log(err)
 		})
@@ -142,10 +156,12 @@ exports.updateInfo = async (req,res) => {
 		let personInfo = _.extend(personOldInfo,info)
 		newInfo = await personInfo.save()
 	}else if(user.role === 1){
+		//企业用户更新信息
 		let companyOldInfo  = await Company.queryAllByAcountId(user._id)
 		let companyInfo = _.extend(companyOldInfo,info)
 		newInfo = await companyInfo.save()
 	}else if(user.role === 2){
+		//管理员用户更新信息
 		let adminstratorOldInfo = await Adminstrator.queryAllByAcountId(user._id)
 		let adminstratorInfo = _.extend(adminstratorOldInfo,info)
 		newInfo = await adminstratorInfo.save()

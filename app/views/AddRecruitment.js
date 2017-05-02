@@ -12,7 +12,7 @@ class AddRecruitment extends React.Component {
 	constructor(props){
 		super(props)
     this.state = {
-      value:1
+      value: -3
     }
 	}
 
@@ -119,7 +119,8 @@ class AddRecruitment extends React.Component {
           >
             {getFieldDecorator('job',{
               initialValue:this.state.value,
-              onChange:this.onChange
+              onChange:this.onChange,
+              rules:[{ required: true, message: 'Please select the job you want!' }],
             })(
             <RadioGroup >
               {this.props.data.jobs.map((job)=>{

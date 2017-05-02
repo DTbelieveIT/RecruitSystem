@@ -14,7 +14,7 @@ var portDev = appConfig.portDev
 
 module.exports = {
   entry:{
-    main:[path.resolve(__dirname,'../app/index.js'),path.resolve(__dirname,'../app/views/Logon.js')],
+    main:path.resolve(__dirname,'../app/index.js'),
     vendor:['react','react-dom'],
   },
   output:{
@@ -28,21 +28,12 @@ module.exports = {
   module:{
     rules:[
       {
-        test:/\.css$/,
-        use:extractCss.extract({
-          fallback:'style-loader',
-          use:{
-            loader:'css-loader',
-            options:{
-              modules:true,
-              devtool:'source-map'
-            }
-          }
+        test: /\.(less|css)$/,
+        use: extractTextplugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'postcss-loader', 'less-loader'],
+          publicPath: '../'
         })
-      },
-      {
-        test:/\.less$/,
-        use:extractLess.extract(['css-loader', 'less-loader'])
       },
       {
         test:/\.js$/,

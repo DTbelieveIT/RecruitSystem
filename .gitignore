@@ -1,4 +1,4 @@
 node_modules
 build
-upload
+public/upload
 npm-debug.log

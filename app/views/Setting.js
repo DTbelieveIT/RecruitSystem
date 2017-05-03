@@ -120,7 +120,7 @@ class UpdateInfoForm extends React.Component {
     };
 
     //已经上传的简历和作品
-    const resume = this.props.person && this.props.person.resume.path.map(function(path){
+    const resume = this.props.infos && this.props.infos.resume && this.props.infos.resume.path.map(function(path){
       return (
         <li><a href={path} target="_blank" >{path.substring(uploadUrlLen+1)}</a></li>
       )
@@ -191,7 +191,7 @@ class UpdateInfoForm extends React.Component {
             )}
           >
             {getFieldDecorator('resume["name"]', {
-              initialValue:this.props.person.resume.name,
+              initialValue:this.props.infos.resume.name,
               rules: [{ whitespace: true }],
             })(
               <Input />
@@ -202,7 +202,7 @@ class UpdateInfoForm extends React.Component {
             label="手机号码"
           >
             {getFieldDecorator('resume["phone"]', {
-              initialValue:this.props.person.resume.phone,
+              initialValue:this.props.infos.resume.phone,
               rules: [{ required: true, message: 'Please input your phone number!' }],
             })(
               <Input />
@@ -213,7 +213,7 @@ class UpdateInfoForm extends React.Component {
             label="邮箱"
           >
             {getFieldDecorator('resume["email"]', {
-              initialValue:this.props.person.resume.email,
+              initialValue:this.props.infos.resume.email,
               rules: [{
                 type: 'email', message: 'The input is not valid E-mail!',
               }, {
@@ -228,7 +228,7 @@ class UpdateInfoForm extends React.Component {
             label="心仪工作"
           >
             {getFieldDecorator('resume["job"]["name"]', {
-              initialValue:this.props.person.resume.job.name
+              initialValue:this.props.infos.resume.job.name
             })(
               <Input/>
             )}
@@ -255,7 +255,7 @@ class UpdateInfoForm extends React.Component {
               <AvatarFile  action="/file/upload"  onChange={()=>{}} />
             )}
           </FormItem>  
-          {this.props.person.resume.path && this.props.person.resume.path.length !== 0 ? 
+          {this.props.infos && this.props.infos.resume && this.props.infos.resume.path.length !== 0 ? 
           <FormItem
             {...formItemLayout}
             label="已上传的文件"
@@ -331,7 +331,7 @@ class UpdateInfoForm extends React.Component {
             )}
           >
             {getFieldDecorator('name', {
-              initialValue:this.props.company.name,
+              initialValue:this.props.infos.name,
               rules: [{ whitespace: true }],
             })(
               <Input />
@@ -342,7 +342,7 @@ class UpdateInfoForm extends React.Component {
             label="公司地址"
           >
             {getFieldDecorator('address', {
-              initialValue:this.props.company.address,
+              initialValue:this.props.infos.address,
               rules: [{ required: true, message: 'Please input your company address!' }],
             })(
               <Input />
@@ -353,7 +353,7 @@ class UpdateInfoForm extends React.Component {
             label="公司规模"
           >
             {getFieldDecorator('size', {
-              initialValue:this.props.company.size
+              initialValue:this.props.infos.size
             })(
               <Input type="number"/>
             )}
@@ -363,7 +363,7 @@ class UpdateInfoForm extends React.Component {
             label="公司成立时间"
           >
             {getFieldDecorator('foundAt', {
-              initialValue:moment(this.props.company.foundAt).format('YYYY-MM-DD')
+              initialValue:moment(this.props.infos.foundAt).format('YYYY-MM-DD')
             })(
               <Input type="date"/>
             )}
@@ -447,7 +447,7 @@ class UpdateInfoForm extends React.Component {
               )}
             >
               {getFieldDecorator('name', {
-                initialValue:this.props.adminstrator.name,
+                initialValue:this.props.infos.name,
                 rules: [{ whitespace: true }],
               })(
                 <Input />
@@ -458,7 +458,7 @@ class UpdateInfoForm extends React.Component {
               label="手机号码"
             >
               {getFieldDecorator('phone', {
-                initialValue:this.props.adminstrator.phone,
+                initialValue:this.props.infos.phone,
                 rules: [{ required: true, message: 'Please input your phone number!' }],
               })(
                 <Input />
@@ -477,29 +477,32 @@ class UpdateInfoForm extends React.Component {
 UpdateInfoForm.PropTypes = {
 	updateStatus:PropTypes.number,
 	data:PropTypes.object.isRequired,
-	user:PropTypes.object.isRequired,
-	person:PropTypes.object.isRequired,
-	company:PropTypes.object.isRequired,
-	adminstrator:PropTypes.object.isRequired,
+	infos:PropTypes.object.isRequired,
+  role:PropTypes.number.isRequired
 }
 
 UpdateInfoForm.defaultProps = {
 	updateStatus:-3,
 	data:{},
-	user:{},
-	person:{},
-	company:{},
-	adminstrator:{},
+  infos:{},
   role:-1,
 }
 
 function mapStateToProps(state){
   // state.loginReducer = VSetting
+  let infos
+  let role = state.loginReducer.data.user.role
+  if(role === 0){
+    infos = state.loginReducer.data.info || {resume:{job:{}}}
+  }else if(role === 1){
+    infos = state.loginReducer.data.info || {}
+  }else if(role === 2){
+    infos = state.loginReducer.data.info || {}
+  }
+
 	return {
 		user:state.loginReducer.data.user || {},
-		person:state.loginReducer.data.info || {resume:{job:{}}},
-		company:state.loginReducer.data.info || {},
-		adminstrator:state.loginReducer.data.info || {},
+    infos:infos,
 		updateStatus:state.loginReducer.updateStatus,
     data:state.loginReducer.data,
     role:state.loginReducer.data.user.role

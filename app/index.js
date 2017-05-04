@@ -2,12 +2,10 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Router,Route,IndexRoute } from 'react-router'
 import {Provider} from 'react-redux'
-import configStore from './store/ConfigStore'
+import store from './store/ConfigStore'
 import defineHistory from './history'
 import App from './views/App'
 require('./style/index.less')
-
-const store = configStore()
 
 const Home = (location,callback) => {
 	require.ensure([],require => {
@@ -63,20 +61,27 @@ const RecruitmentDetail = (location,callback) => {
 	},'RecruitmentDetail')
 }
 
+const Chat = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Chat'))
+	},'Chat')
+}
+
 render((
 	<Provider store={store}>
 		<Router history={defineHistory}>
 			<Route path="/" component={App}>
-				<IndexRoute getComponent={Home}/>
+				<IndexRoute getComponent={RecruitmentList}/>
 				<Route path="company" getComponent={Company}/>
 				<Route path="experience" getComponent={Experience}/>
+				<Route path="login" getComponent={Login}/>
+				<Route path="logon" getComponent={Logon}/>
+				<Route path="setting" getComponent={Setting}/>
+				<Route path="addRecruitment" getComponent={AddRecruitment}/>
+				<Route path="recruitmentList" getComponent={RecruitmentList}/>
+				<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
+				<Route path="/chat/:id/:account" getComponent={Chat} />
 			</Route>
-			<Route path="login" getComponent={Login}/>
-			<Route path="logon" getComponent={Logon}/>
-			<Route path="setting" getComponent={Setting}/>
-			<Route path="addRecruitment" getComponent={AddRecruitment}/>
-			<Route path="recruitmentList" getComponent={RecruitmentList}/>
-			<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
 		</Router>
 	</Provider>
 ),document.getElementById('app'))

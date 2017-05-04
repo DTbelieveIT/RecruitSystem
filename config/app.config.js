@@ -1,5 +1,7 @@
 module.exports = {
-	database: process.env.MONGO_URI || 'mongodb://localhost/rs',
+	server:'localhost',
+	serverDev:'localhost',
+	host:'127.0.0.1',
 	port: 9999,
 	portDev: 9000,
 	//图片上传配置
@@ -14,5 +16,14 @@ module.exports = {
 				}
 			}
 		}
+	},
+	redis:{
+		port:6379,
+	},
+	mongodb:{
+		database: process.env.MONGO_URI || 'mongodb://localhost/rs',
+	},
+	session:{
+		cookieSecret:'secret'
 	}
 }

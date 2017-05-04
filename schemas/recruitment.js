@@ -42,12 +42,23 @@ RecruitmentSchema.statics = {
 			})
 		})
 	},
-	// fetch:function(cb){
-	// 	return this
-	// 	.find({})
-	// 	.sort('meta.updateAt')
-	// 	.exec(cb);
-	// },
+	fetchById:function(id){
+		return new Promise((resolve,reject) => {
+			this
+			.findOne({_id:id})
+			.populate({
+				path:'company',
+				populate:{
+					path:'company'
+				}
+			})
+			.populate('job')
+			.populate('person')
+			.exec((err,info) => {
+				resolve(info)
+			})
+		})
+	},
 	findByName:function(name,cb){
 		return this
 		.findOne({name:name})

@@ -35,3 +35,8 @@ exports.recruitmentList = async function(req,res){
 	let infos = await Recruitment.fetch()
 	res.send({code:200,infos:infos})
 } 
+
+//update recruitment
+exports.updateRecruitment = async function(req,res){
+
+}

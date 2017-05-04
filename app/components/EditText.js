@@ -16,7 +16,8 @@ class EditText extends React.Component{
 		return (
 			<div id={this.props.id} className="edit-text" style={{
 				width:this.props.width,
-				margin:this.props.margin
+				margin:this.props.margin,	
+				display:this.props.display			
 			}}>
 				<input type={this.props.type} placeholder={this.props.placeholder} onChange={this.handleChange.bind(this)} name={this.props.name} value={this.props.value} />
 			</div>
@@ -40,8 +41,9 @@ EditText.defaultProps = {
 	placeholder:'',
 	onChange:(value)=>{},
 	value:'',
-	width:'80%',
+	width:'400px',
 	margin:'0 0 0 0',
+	display:'block'
 }
 
 export default EditText

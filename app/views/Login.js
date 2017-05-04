@@ -97,9 +97,9 @@ class Login extends Component{
                 		paddingTop:'1rem'
                 	}}>
                 	</div>
-                	<Button onClick={this.login} id='login' width='100%' height='4rem' radius='.5rem' margin='2% auto 2% auto' fontSize='1.8rem' text=' 登 录 '/>
                     <div className='feedback'>
                         <span onClick={this.logon.bind(this)} id='logon'>注册新账号</span>
+                		<Button onClick={this.login} id='login' width='100px' height='4rem' radius='.5rem' margin='2% auto' fontSize='1.8rem' text=' 登 录 '/>
                     </div>	
 				</div>
 			</div>

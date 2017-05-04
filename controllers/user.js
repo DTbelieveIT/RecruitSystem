@@ -7,6 +7,7 @@ import {RSADecrypt} from '../tools/RSADecrypt'
 import _ from 'underscore'
 import appConfig from '../config/app.config'
 import path from 'path'
+import Recruitment from '../models/recruitment'
 
 let roles = ['person','company','adminstrator']
 let {upload} = appConfig
@@ -176,6 +177,17 @@ exports.updateInfo = async (req,res) => {
 	res.send({code:200,info:newInfo,user:user})
 }
 
-exports.test  = (req,res) => {
-	res.send({result:'test'})
+exports.test  = async (req,res) => {
+	let {id,uid} = req.query
+	let info = await Recruitment.fetchById(id)
+	console.log(info.person)
+	let result = info.person.find(function(person){
+		//严格等于时不相等，可能是ObjectId类型
+		return person._id == uid
+	})
+	if(!result){
+		console.log('新投递者')
+		await Recruitment.update({_id:id},{$push:{person:uid}})
+	}
+	res.send({result:info})
 }

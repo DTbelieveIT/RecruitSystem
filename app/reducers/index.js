@@ -6,7 +6,8 @@ import {
 	PHONE,NAME,EMAIL,JOB,ADDRESS,SIZE,FOUNDAT,
 	CLEAR,
 	UPDATEINFO,
-	QUERYJOBLIST,ADDRECRUITMENT,RECRUITMENTLIST
+	QUERYJOBLIST,ADDRECRUITMENT,RECRUITMENTLIST,
+	ADDMESSAGE,GETHISTORYMESSAGE,UPDATEMESSAGE
 } from '../constants/Const'
 
 let initState = {
@@ -210,9 +211,28 @@ function logonReducer(state={
 	}
 }
 
+/**
+ * 消息的reducer
+ */
+ function messageReducer(state={
+ 	message:[]
+ },action){
+ 	switch(action.type){
+ 		case ADDMESSAGE:
+ 			return {...state,message: {result:[...state.message.result,action.data, ]}}
+ 		case UPDATEMESSAGE:
+ 			return {...state,message: {result:[...state.message.result,action.data, ]}}
+ 		case GETHISTORYMESSAGE:
+ 			return {...state,message:action.data}
+ 		default:
+ 			return state
+ 	}
+ }
+
 export default combineReducers({
 	loginReducer,
 	logonReducer,
 	recruitmentReducer,
-	jobReducer
+	jobReducer,
+	messageReducer
 })

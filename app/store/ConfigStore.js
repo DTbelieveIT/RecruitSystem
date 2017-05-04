@@ -15,6 +15,4 @@ const store = createStore(
 )
 
 
-export default function(initialState){
-	return store;
-}
+export default store

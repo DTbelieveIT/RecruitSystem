@@ -2,6 +2,7 @@
 import User from '../controllers/user'
 import Recruitment from '../controllers/recruitment'
 import File from '../controllers/file'
+import Message from '../controllers/message'
 
 module.exports = function(app){
 	//User
@@ -14,4 +15,7 @@ module.exports = function(app){
 	app.post('/api/addRecruitment',Recruitment.addRecruitment)
 	app.get('/api/queryJobList',Recruitment.queryJobList)
 	app.get('/api/recruitmentList',Recruitment.recruitmentList)
+
+	//Message
+	app.get('/api/getHistoryMessage',Message.getHistoryMessage)
 }

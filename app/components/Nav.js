@@ -23,10 +23,10 @@ class Nav extends Component{
 			<div className='main'>
 				<div className='left'>
 					<Link to="/">首页</Link>{' '}
-					<Link to="/addRecruitment">发布招聘信息</Link>{' '}
-					<Link to="/recruitmentList">查看招聘信息</Link>{' '}
-					<Link to="/company">公司</Link>{' '}
-					<Link to="/experience">面经</Link>
+					{this.props.isLogin && this.props.user.role === 1 ? (<Link to="/addRecruitment">发布招聘信息</Link>) : null}
+					{' '}
+					<Link to="/company">公司介绍页</Link>{' '}
+					<Link to="/experience">面经交流论坛</Link>
 				</div>
 				<div className='right'>
 					{this.props.isLogin ? (

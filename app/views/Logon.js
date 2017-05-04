@@ -211,7 +211,7 @@ class Logon extends Component{
 						<EditText margin=".2rem 0 0 0" value={this.props.name} id="name" type="text" onChange={this.handleChange} placeholder="管理员姓名" name="name"/>
 						<EditText margin=".2rem 0 0 0" value={this.props.phone} id="phone" type="number" onChange={this.handleChange} placeholder="管理员手机号码" name="phone"/>
 					</div>
-					{this.state.display.block?<Button  onClick={this.logon.bind(this)} id='logon' width='100%' height='4rem' radius='.5rem' margin='2% auto 2% auto' fontSize='1.8rem' text=' 注 册 '/>:<Button  onClick={this.fillInfo.bind(this)} id='next' width='100%' height='4rem' radius='.5rem' margin='2% auto 2% auto' fontSize='1.8rem' text=' 下一步 '/>}
+					{this.state.display.block?<Button  onClick={this.logon.bind(this)} id='logon' width='100px' height='4rem' radius='.5rem' margin='2% auto 2% auto' fontSize='1.8rem' text=' 注 册 '/>:<Button  onClick={this.fillInfo.bind(this)} id='next' width='100px' height='4rem' radius='.5rem' margin='2% auto 2% auto' fontSize='1.8rem' text=' 下一步 '/>}
 				</div>
 			</div>
 		)

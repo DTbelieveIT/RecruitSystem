@@ -2,7 +2,7 @@
 * rsa解密
 */
 import NodeRSA from 'node-rsa'
-import privKey from '../config/rsa_1024_priv'
+import privKey from '../../config/rsa_1024_priv'
 
 export function RSADecrypt(encryptedString){
 	let key = new NodeRSA(privKey)

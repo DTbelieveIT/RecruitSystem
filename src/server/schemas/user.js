@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import bcrypt from 'bcrypt-nodejs'
 
 let UserSchema = new mongoose.Schema({
 	account:{
@@ -24,13 +25,26 @@ let UserSchema = new mongoose.Schema({
 })
 
 UserSchema.pre('save',function(next){
-	// var user = this
-	// console.log('-------------------------')
-	// console.log(user)
-	// console.log('-------------------------')
-	// user.password = 'preson'
-	next()
+	var user = this
+	if(this.isNew){
+		this.meta.createAt = this.meta.updateAt = Date.now()
+	}else{
+		this.meta.updateAt = Date.now()
+	}
+	bcrypt.hash(user.password,null,null,function(err,hash){
+		if(err){
+			return next(err)
+		}
+		user.password = hash
+		next()
+	})
 })
+
+UserSchema.methods = {
+	comparePassword:function(_password){
+		return bcrypt.compareSync(_password,this.password)
+	}
+}
 
 UserSchema.statics = {
 	fetch:function(cb){

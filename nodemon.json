@@ -13,7 +13,7 @@
 	 "start": "echo 'app start'",
 	 "restart": "echo 'app restart'"
 	},
-	"watch": ["controllers/*","config/*","schemas/*", "models/*","server.js"],
+	"watch": ["src/server/*"],
 	"ext": "js json",
 	"legacy-watch": false
 }

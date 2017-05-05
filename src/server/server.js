@@ -1,5 +1,6 @@
 var express = require('express')
 var path = require('path')
+var fs = require('fs')
 var bodyParser = require('body-parser')
 var logger = require('morgan')
 var mongoose = require('mongoose')
@@ -8,7 +9,7 @@ var http = require('http')
 var session = require('express-session');
 var redis = require('redis')
 var RedisStore = require('connect-redis')(session);
-var appConfig = require('./config/app.config.js')
+var appConfig = require('../../config/app.config.js')
 
 //connect MongoDB
 mongoose.connect(appConfig.mongodb.database)
@@ -41,16 +42,29 @@ io.use(function(socket, next) {
     sessionMiddle(socket.request, socket.request.res, next);
 });
 
-//Chat
-var message = require('./controllers/message')
+//socket router
+var router = require('./route/index')
+
+fs.readdir(`${__dirname}/route`,(err,result) => {
+	for(var file of result){
+		if(file !== 'index.js'){
+			var routers = require(`./route/${file}`)
+			for(var routePath in router){
+				if(Object.hasOwnProperty.call(routers,routePath)){
+					router[routePath] = routers[routePath]
+					// router[routePath] = promise.coroutine(routers[routePath])
+				}
+			}
+		}
+	}
+})
+
+//socket handle
 io.on('connection', function (socket) {
 	console.log('socket已连接')
 
-	socket.on('new message', function (data) {
-		let newMessage
-		message.saveMessage(data.meId,data.linkmanId,data.content).then((newMessage) => {
-			socket.broadcast.emit('new message',newMessage)
-		})
+	socket.on('message', function (data,cb) {
+		router.handle(io,socket,data,cb)
 	});
 
 	socket.on('disconnect',function(){
@@ -58,6 +72,24 @@ io.on('connection', function (socket) {
 	})
 
 });
+
+//Chat
+// var message = require('./controllers/message')
+// io.on('connection', function (socket) {
+// 	console.log('socket已连接')
+
+// 	socket.on('new message', function (data) {
+// 		let newMessage
+// 		message.saveMessage(data.meId,data.linkmanId,data.content).then((newMessage) => {
+// 			socket.broadcast.emit('new message',newMessage)
+// 		})
+// 	});
+
+// 	socket.on('disconnect',function(){
+// 		console.log('socket已断开')
+// 	})
+
+// });
 
 /**
  * express middleware
@@ -69,12 +101,12 @@ app.use('/file/upload', upload.fileHandler())
 //parse application/json middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
-app.use(express.static(path.join(__dirname,'public')))
+app.use(express.static(path.join(__dirname,'../../public')))
 //session middleware
 app.use(sessionMiddle)
 
-//process route
-require('./config/routes')(app)
+//express process route
+require('../../config/routes')(app)
 
 
 //distinguish env

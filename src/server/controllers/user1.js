@@ -1,13 +1,15 @@
+import path from 'path'
+import _ from 'underscore'
+
 import User from '../models/user'
 import Adminstrator from '../models/adminstrator'
+import Recruitment from '../models/recruitment'
 import Person from '../models/person'
 import Company from '../models/company'
 import Job from '../models/job'
-import {RSADecrypt} from '../tools/RSADecrypt'
-import _ from 'underscore'
-import appConfig from '../config/app.config'
-import path from 'path'
-import Recruitment from '../models/recruitment'
+
+import {RSADecrypt} from '../../tools/RSADecrypt'
+import appConfig from '../../../config/app.config'
 
 let roles = ['person','company','adminstrator']
 let {upload} = appConfig

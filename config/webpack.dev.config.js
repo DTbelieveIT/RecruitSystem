@@ -14,7 +14,7 @@ var portDev = appConfig.portDev
 
 module.exports = {
   entry:{
-    main:path.resolve(__dirname,'../app/index.js'),
+    main:path.resolve(__dirname,'../src/client/index.js'),
     vendor:['react','react-dom','react-router','antd']
   },
   output:{

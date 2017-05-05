@@ -6,10 +6,10 @@
   "scripts": {
     "start": "if-env NODE_ENV=production&&npm run start:prod || npm run start:dev",
     "start:dev": "webpack-dev-server --config ./config/webpack.dev.config.js --inline --hot --progress",
-    "start:prod": "nodemon -x babel-node server.js",
+    "start:prod": "nodemon -x babel-node ./src/server/server.js",
     "build": "npm run build:client",
     "build:client": "webpack --config ./config/webpack.prod.config.js -w -p",
-    "server": "nodemon -x babel-node server.js"
+    "server": "nodemon -x babel-node ./src/server/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -50,6 +50,7 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.24.1",
+    "bcrypt-nodejs": "0.0.3",
     "clean-webpack-plugin": "^0.1.16",
     "connect-mongo": "^1.3.2",
     "cookie-session": "^2.0.0-beta.1",

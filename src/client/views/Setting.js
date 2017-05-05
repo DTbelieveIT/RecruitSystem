@@ -7,7 +7,7 @@ import AvatarImg from '../components/AvatarImg'
 import AvatarFile from '../components/AvatarFile'
 import moment from 'moment'
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button} from 'antd'
-import appConfig from '../../config/app.config.js'
+import appConfig from '../../../config/app.config.js'
 import VSetting from '../virtual_data/Setting'
 
 const FormItem = Form.Item

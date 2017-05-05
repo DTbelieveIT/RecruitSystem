@@ -67,6 +67,24 @@ const Chat = (location,callback) => {
 	},'Chat')
 }
 
+const Login1 = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Login1'))
+	},'Login1')
+}
+
+const Logon1 = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Logon1'))
+	},'Logon1')
+}
+
+const Agreement = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/Agreement'))
+	},'Agreement')
+}
+
 render((
 	<Provider store={store}>
 		<Router history={defineHistory}>
@@ -74,14 +92,17 @@ render((
 				<IndexRoute getComponent={RecruitmentList}/>
 				<Route path="company" getComponent={Company}/>
 				<Route path="experience" getComponent={Experience}/>
-				<Route path="login" getComponent={Login}/>
-				<Route path="logon" getComponent={Logon}/>
-				<Route path="setting" getComponent={Setting}/>
-				<Route path="addRecruitment" getComponent={AddRecruitment}/>
-				<Route path="recruitmentList" getComponent={RecruitmentList}/>
-				<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
-				<Route path="/chat/:id/:account" getComponent={Chat} />
+				<Route path="login1" getComponent={Login1}/>
+				<Route path="Logon1" getComponent={Logon1}/>
 			</Route>
+			<Route path="login" getComponent={Login}/>
+			<Route path="logon" getComponent={Logon}/>
+			<Route path="setting" getComponent={Setting}/>
+			<Route path="addRecruitment" getComponent={AddRecruitment}/>
+			<Route path="recruitmentList" getComponent={RecruitmentList}/>
+			<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
+			<Route path="/chat/:id/:account" getComponent={Chat} />			
+			<Route path="agreement" getComponent={Agreement}/>
 		</Router>
 	</Provider>
 ),document.getElementById('app'))

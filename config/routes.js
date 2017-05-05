@@ -1,8 +1,8 @@
 //controllers
-import User from '../controllers/user'
-import Recruitment from '../controllers/recruitment'
-import File from '../controllers/file'
-import Message from '../controllers/message'
+import User from '../src/server/controllers/user'
+import Recruitment from '../src/server/controllers/recruitment'
+import File from '../src/server/controllers/file'
+import Message from '../src/server/controllers/message'
 
 module.exports = function(app){
 	//User

@@ -1,6 +1,7 @@
 import { Upload, Icon, message } from 'antd';
 import React,{ Component , PropTypes} from 'react'
-require('../style/AvatarImg.less')
+
+import './AvatarImg.less'
 
 function getBase64(img, callback) {
   const reader = new FileReader();

@@ -2,7 +2,7 @@ import {
 	REQUEST_DATA,REQUEST_FAIL,RECEIVE_DATA,
 	LOGIN,LOGON
 } from '../constants/Const'
-import api from '../apis'
+import api from '../api/apis1.js'
 
 export function updateEditText(value,kind){
 	return {

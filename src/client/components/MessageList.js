@@ -1,7 +1,7 @@
 import React , { Component }from 'react'
 import {connect} from 'react-redux'
 
-import '../style/MessageList.less'
+import './MessageList.less'
 
 class MessageList extends Component {
 

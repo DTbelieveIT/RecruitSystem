@@ -1,11 +1,11 @@
 import React,{ Component , PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
-import defineHistory from '../history'
+import defineHistory from '../../../history'
 import _ from 'underscore'
 import moment from 'moment'
 import { Card,Button } from 'antd'
-import VRecruitmentDetail from '../virtual_data/RecruitmentDetail'
+import VRecruitmentDetail from '../../../virtual_data/RecruitmentDetail'
    
 class RecruitmentDetail extends React.Component {
 	constructor(props){
@@ -51,12 +51,12 @@ class RecruitmentDetail extends React.Component {
 
 function mapStateToProps(state,ownProps){
 	let id = ownProps.params.id
-	let info = _.filter(state.recruitmentReducer.data.infos || [],function(info){
+	let info = _.filter(state.recruitment.infos || [],function(info){
 		return info._id === id
 	})
 	return {
-		info:info[0] || {},
-		user:state.loginReducer.data.user || {},
+		info:info[0],
+		user:state.user.user,
 		id:id
 	}
 }

@@ -1,7 +1,7 @@
 import React , { Component }from 'react'
 import {connect} from 'react-redux'
 
-import '../style/InputBox.less'
+import './InputBox.less'
 import {sendMessage} from '../socket'
 
 class InputBox extends Component {

@@ -1,10 +1,11 @@
 import React,{ Component , PropTypes} from 'react'
-import {connect} from 'react-redux'
-import {fetchDataIfNeed} from '../actions'
-import {ADDRECRUITMENT,QUERYJOBLIST,CLEAR} from '../constants/Const'
-import defineHistory from '../history'
-import moment from 'moment'
 import { Form, Input,Radio, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button } from 'antd'
+import {connect} from 'react-redux'
+import recruitment from '../../../actions/recruitment'
+import ui from '../../../actions/ui'
+import defineHistory from '../../../history'
+import moment from 'moment'
+
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 
@@ -27,40 +28,25 @@ class AddRecruitment extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-      	console.log('发送招聘信息添加请求');
-      	this.props.dispatch(fetchDataIfNeed({
-      		method:'POST',
-      		path:'/addRecruitment',
-      		category:ADDRECRUITMENT,
-      		query:values
-      	}))
         console.log('Received values of form: ', values);
+        console.log('发送招聘信息添加请求')
+        recruitment
+        .addRecruitment(values)
+        .then(result => {
+          if(result.status === 200){
+            ui.openNotification('add success!')
+            defineHistory.push('/main')
+          }else{
+            ui.openNotification('add fail!')
+          }
+        })
       }
     });
   }
 
-	componentWillReceiveProps(nextProps){
-      if(nextProps.status === 1 && nextProps.data!==undefined){
-        if(nextProps.data.code === 200){
-          alert('addRecruitment success')    
-          defineHistory.replace('/')
-        }else{
-          alert('addRecruitment fail')
-        }
-      }    
-  }
-
-  componentDidMount(){
-      this.props.dispatch(fetchDataIfNeed({
-          method:'GET',
-          path:'/queryJobList',
-          category:QUERYJOBLIST
-      }))
+  componentWillMount(){
+      recruitment.queryJobList()
   } 
-
-  componentWillUnmount(){
-    this.props.dispatch({type:ADDRECRUITMENT+CLEAR})
-  }  
 
   render() {
     const { getFieldDecorator,getFieldProps } = this.props.form;
@@ -123,16 +109,16 @@ class AddRecruitment extends React.Component {
               rules:[{ required: true, message: 'Please select the job you want!' }],
             })(
             <RadioGroup >
-              {this.props.data.jobs.map((job)=>{
+              {this.props.jobs&&this.props.jobs.map((job)=>{
                 return <Radio style={radioStyle} key={job._id} value={job._id}>{job.name}</Radio>          
               })}
-              <Radio style={radioStyle} value={this.props.data.jobs.length}>
+              <Radio style={radioStyle} value={this.props.jobs&&this.props.jobs.length}>
                 More...
               </Radio>
             </RadioGroup>
               )}
           </FormItem>
-          {this.state.value === this.props.data.jobs.length ? 
+          {this.props.jobs && this.state.value === this.props.jobs.length ? 
           <FormItem
             {...formItemLayout}
             label="你想要招聘职位"
@@ -197,22 +183,10 @@ class AddRecruitment extends React.Component {
   }
 }
 
-AddRecruitment.PropTypes = {
-  info:PropTypes.object.isRequired,
-  data:PropTypes.object,
-  status:PropTypes.number
-}
-
-AddRecruitment.defaultProps = {
-  info:{},
-  status:-3
-}
-
 function mapStateToProps(state){
 	return {
-    info:state.loginReducer.data.info,
-    data:state.jobReducer.data || {jobs:[]},
-    status:state.recruitmentReducer.status
+    info:state.user.info,
+    jobs:state.recruitment.jobs,
 	}
 }
 

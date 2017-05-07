@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {GETHISTORYMESSAGE} from '../constants/Const'
 import {getHistoryMessage} from '../actions/message'
 
-import '../style/chatPanel.less'
+import './chatPanel.less'
 
 import MessageList from '../components/MessageList'
 import InputBox from '../components/InputBox'

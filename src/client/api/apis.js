@@ -1,4 +1,4 @@
-import {dictToString,dictToJson} from './util'
+import {dictToString,dictToJson} from '../util/util'
 // import 'whatwg-fetch'
 // import Promise from 'promise-polyfill'
 
@@ -19,7 +19,6 @@ let data = {
 }
 
 export default function(...params){
-	console.log(params)
 	if(params.length > 1){
 		fetchAllData(params)
 	}else{
@@ -48,10 +47,6 @@ function fetchAllData(params){
 }
 
 function fetchData(params,data){
-	console.log(222222222)
-	console.log(params)
-	console.log(data)
-	console.log(222222222)
 	return fetch(basePath+params[0].path+(data.method !== 'GET' ? '' : params[0].query),data)
 		.then(res=>res.json())
 }

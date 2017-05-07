@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import defineHistory from '../history'
+import defineHistory from '../../history'
 import { Link } from 'react-router'
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import user from '../actions/user'
+import user from '../../actions/user'
+import ui from '../../actions/ui'
 
-import './Login1.less'
+import './Login.less'
 
 const FormItem = Form.Item;
 
@@ -21,15 +22,31 @@ class Login extends Component {
                 console.log('Received values of form: ', values);
                 user
                     .login(values)
-                    .then(data => {
-                        console.log(data)
-                        if(data.status){
+                    .then(result => {
+                        if(result.status === 200){
+                            window.localStorage.setItem('token',result.data.token)
+                            ui.openNotification('login success')
                             defineHistory.push('/')
+                            user.online()
+                        }else {
+                            if(result.data === 'user not exist'){
+                                ui.openNotification('user not exist')
+                            }else if(result.data === 'you have login'){
+                                ui.openNotification('you have login')
+                            }else if(result.data === 'password is not match'){
+                                ui.openNotification('password is not match')
+                            }
                         }
-                    })
-
+                    })                
             }
         });
+    }
+    renderLogin = () => {
+
+    }
+
+    renderLogon = () => {
+        
     }
 
     render() {
@@ -65,7 +82,7 @@ class Login extends Component {
                   <Button type="primary" htmlType="submit" className="login-form-button">
                     登录
                   </Button>
-                  <Link to="/logon1">立即注册</Link>
+                  <Link to="/logon">立即注册</Link>
                   <a className="login-form-forgot" href="">忘记密码</a>
                 </FormItem>
               </Form>

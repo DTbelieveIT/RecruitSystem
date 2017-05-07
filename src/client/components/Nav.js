@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { LOGOUT } from '../constants/Const'
 import { Menu, Dropdown, Icon } from 'antd'
-import '../style/Nav.less'
+import './Nav.less'
 
 class Nav extends Component {
     logout() {

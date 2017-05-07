@@ -1,14 +1,16 @@
 import React,{ Component , PropTypes} from 'react'
-import {connect} from 'react-redux'
-import {fetchDataIfNeed} from '../actions'
-import {UPDATEINFO,CLEAR} from '../constants/Const'
-import defineHistory from '../history'
-import AvatarImg from '../components/AvatarImg'
-import AvatarFile from '../components/AvatarFile'
-import moment from 'moment'
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button} from 'antd'
-import appConfig from '../../../config/app.config.js'
-import VSetting from '../virtual_data/Setting'
+import moment from 'moment'
+import {connect} from 'react-redux'
+import {fetchDataIfNeed} from '../../../actions'
+import {UPDATEINFO,CLEAR} from '../../../constants/Const'
+import defineHistory from '../../../history'
+import AvatarImg from '../../../components/AvatarImg'
+import AvatarFile from '../../../components/AvatarFile'
+import appConfig from '../../../../../config/app.config.js'
+import user from '../../../actions/user'
+import ui from '../../../actions/ui'
+// import VSetting from '../../../virtual_data/Setting'
 
 const FormItem = Form.Item
 const uploadUrlLen = appConfig.upload.file.uploadUrl.length
@@ -26,14 +28,14 @@ class UpdateInfoForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-      	console.log('发送请求');
-      	this.props.dispatch(fetchDataIfNeed({
-      		method:'POST',
-      		path:'/updateInfo',
-      		category:UPDATEINFO,
-      		query:values
-      	}))
         console.log('Received values of form: ', values);
+        user
+        .updateInfo(values)
+        .then(result => {
+          if(result.status === 200){
+              ui.openNotification('updateInfo success')
+          }
+        })
       }
     });
   }
@@ -474,38 +476,20 @@ class UpdateInfoForm extends React.Component {
   }
 }
 
-UpdateInfoForm.PropTypes = {
-	updateStatus:PropTypes.number,
-	data:PropTypes.object.isRequired,
-	infos:PropTypes.object.isRequired,
-  role:PropTypes.number.isRequired
-}
-
-UpdateInfoForm.defaultProps = {
-	updateStatus:-3,
-	data:{},
-  infos:{},
-  role:-1,
-}
-
 function mapStateToProps(state){
-  // state.loginReducer = VSetting
-  let infos
-  let role = state.loginReducer.data.user.role
+  let infos,role = state.user.user.role
   if(role === 0){
-    infos = state.loginReducer.data.info || {resume:{job:{}}}
+    infos = state.user.info || {}
   }else if(role === 1){
-    infos = state.loginReducer.data.info || {}
+    infos = state.user.info || {}
   }else if(role === 2){
-    infos = state.loginReducer.data.info || {}
+    infos = state.user.info || {}
   }
 
 	return {
-		user:state.loginReducer.data.user || {},
+		user:state.user.user,
     infos:infos,
-		updateStatus:state.loginReducer.updateStatus,
-    data:state.loginReducer.data,
-    role:state.loginReducer.data.user.role
+    role:role,
 	}
 }
 

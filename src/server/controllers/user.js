@@ -13,7 +13,6 @@ import bcrypt from 'bcrypt-nodejs'
 let {upload} = appConfig
 
 exports.signup = async (req,res) => {
-	console.log(req.body)
 	let userObject = req.body
 	let {account,password,role} = userObject
 	let user = await User.findOne({account:account})
@@ -53,50 +52,39 @@ exports.signup = async (req,res) => {
 			})
 			break
 		case '1':
-			console.log('company')	
+			let {c} = userObject
+			userObj = new Company({
+				company:_user._id,
+				name:c.name,
+				address:c.address,
+				size:c.size,
+				foundAt:c.foundAt,
+			})
+			await userObj.save(function(err,company){
+				if(err){
+					console.log(err)
+				}
+				console.log('logon success')
+				return res.send({status:200})
+			})
 			break
 		case '2':
 			console.log('adminstrator')
+			let {a} = userObject
+			userObj = new Adminstrator({
+				adminstrator:_user._id,
+				name:a.name,
+				phone:a.phone,
+			})
+			await userObj.save(function(err,adminstrator){
+				if(err){
+					console.log(err)
+				}
+				console.log('logon success')
+				return res.send({status:200})
+			})
 
 	}
-
-
-
-	// 	case 'company':
-	// 		console.log('company')
-	// 		userObj = new Company({
-	// 			company:_user._id,
-	// 			name:userObject.name,
-	// 			address:userObject.address,
-	// 			size:userObject.size,
-	// 			foundAt:userObject.foundAt
-	// 		})
-	// 		await userObj.save(function(err,company){
-	// 			if(err){
-	// 				console.log(err)
-	// 			}
-	// 			console.log('logon success!')
-	// 			return res.send({code:200})
-	// 		})
-	// 		break
-	// 	case 'adminstrator':
-	// 		console.log('adminstrator')
-	// 		userObj = new Adminstrator({
-	// 			adminstrator:_user._id,
-	// 			name:userObject.name,
-	// 			phone:userObject.phone
-	// 		})
-	// 		await userObj.save(function(err,adminstrator){
-	// 			if(err){
-	// 				console.log(err)
-	// 			}
-	// 			console.log('logon success!')
-	// 			return res.send({code:200})
-	// 		})
-	// 		break
-	// 	default:
-	// 		throw new Error('illegal role!')
-	// }
 }
 
 exports.signin = async (req,res) => {
@@ -122,24 +110,6 @@ exports.signin = async (req,res) => {
 	}
 	
 }
-
-
-// 	let decrypted = RSADecrypt(password)	
-// 	if(decrypted === _user.password){
-// 		console.log('password is match')
-// 		if(_user.role === 0){
-// 			info = await Person.queryAllByAcountId(_user._id)
-// 		}else if(_user.role === 1){
-// 			info = await Company.queryAllByAcountId(_user._id)
-// 		}else if(_user.role === 2){
-// 			info = await Adminstrator.queryAllByAcountId(_user._id)
-// 		}
-// 		return res.send({code:200,info:info,user:_user})
-// 	}else{
-// 		console.log('password is not match')
-// 		return res.send({result:'login fail'})
-// 	}
-// }
 
 exports.updateInfo = async (req,res) => {
 	let info = req.body
@@ -191,7 +161,7 @@ exports.updateInfo = async (req,res) => {
 		let adminstratorInfo = _.extend(adminstratorOldInfo,info)
 		newInfo = await adminstratorInfo.save()
 	}
-	res.send({code:200,info:newInfo,user:user})
+	res.send({status:200,info:newInfo,user:user})
 }
 
 exports.test  = async (req,res) => {

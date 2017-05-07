@@ -7,13 +7,13 @@ import {
 	CLEAR,
 	UPDATEINFO,
 	QUERYJOBLIST,ADDRECRUITMENT,RECRUITMENTLIST,
-	ADDMESSAGE,GETHISTORYMESSAGE,UPDATEMESSAGE
+	ADDMESSAGE,GETHISTORYMESSAGE,UPDATEMESSAGE,
+	LOGINSUCCESS,ONLINE,OFFLINE,INITIALIZE,
+	OPENNOTIFICATION,CLOSENOTIFICATION
 } from '../constants/Const'
 
-let initState = {
-	data:{
-		code:500,
-	}
+let initialState = {
+	online:false
 }
 
 /**
@@ -189,30 +189,21 @@ function logonReducer(state={
 
 
 /**
- * 工作的reducer
+ * recruitment的reducer
  */
- function jobReducer(state={},action){
+ function recruitment(state={},action){
 	switch (action.type) {
-		case REQUEST_DATA + QUERYJOBLIST:
-			return Object.assign({}, state, {
-				status: 0
-			});
-		case RECEIVE_DATA + QUERYJOBLIST:
-			return Object.assign({}, state, {
-				data: action.data,
-				status: 1,
-			});
-		case REQUEST_FAIL + QUERYJOBLIST:
-			return Object.assign({}, state, {
-				status: -1
-			});
+		case QUERYJOBLIST:
+ 			return {...state, jobs:action.jobs}
+ 		case RECRUITMENTLIST:
+ 			return {...state, infos:action.infos}
 		default:
 			return state;
 	}
 }
 
 /**
- * 消息的reducer
+ * message的reducer
  */
  function messageReducer(state={
  	message:[]
@@ -229,10 +220,50 @@ function logonReducer(state={
  	}
  }
 
+/**
+*  user的reducer
+*/
+function user(state=initialState,action){
+	switch(action.type){
+		case INITIALIZE:
+			return initialState
+		case ONLINE:
+			return {...state,online:true}
+		case OFFLINE:
+			return {...state,online:false}
+		case LOGINSUCCESS:
+			return {...state,user:action.user,info:action.info}
+		case UPDATEINFO:
+			return {...state,user:action.user,info:action.info}
+		default:
+			return state			
+	}
+}
+
+
+/**
+*  ui的reducer
+*/
+function ui(state={
+	showNotification: false,
+    notificationContent: '',
+},action){
+	switch(action.type){
+		case OPENNOTIFICATION:
+			return {...state,showNotification:true,notificationContent:action.content}
+    	case CLOSENOTIFICATION: 
+    		return {...state,'showNotification':false}			
+ 		default:
+ 			return state    		
+	}
+}
+
 export default combineReducers({
 	loginReducer,
 	logonReducer,
 	recruitmentReducer,
-	jobReducer,
-	messageReducer
+	messageReducer,
+	recruitment,
+	user,
+	ui,
 })

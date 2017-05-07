@@ -49,7 +49,7 @@ fs.readdir(`${__dirname}/route`,(err,result) => {
 	for(var file of result){
 		if(file !== 'index.js'){
 			var routers = require(`./route/${file}`)
-			for(var routePath in router){
+			for(var routePath in routers){
 				if(Object.hasOwnProperty.call(routers,routePath)){
 					router[routePath] = routers[routePath]
 					// router[routePath] = promise.coroutine(routers[routePath])

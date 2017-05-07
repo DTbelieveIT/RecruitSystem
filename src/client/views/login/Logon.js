@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import defineHistory from '../history'
+import defineHistory from '../../history'
 import { Link } from 'react-router'
-import user from '../actions/user'
+import user from '../../actions/user'
+import ui from '../../actions/ui'
 import { Form, Input, Radio,DatePicker, InputNumber, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button } from 'antd';
 
 import './Logon.less'
@@ -17,6 +18,7 @@ class Logon extends React.Component {
         this.state = {
             confirmDirty: false,
             role: '0',
+            size:'0',
         }
     }
     handleSubmit = (e) => {
@@ -29,8 +31,13 @@ class Logon extends React.Component {
                     .then(data => {
                         console.log(data)
                     	if(data.status === 200){
-                    		defineHistory.push('/login1')
-                    	}
+                    		defineHistory.push('/login')
+                            ui.openNotification('logon success!')
+                        }else{
+                            if(data.result === 'account existed!'){
+                                ui.openNotification('account existed!')
+                            }
+                        }
                     })
             }
         });
@@ -249,13 +256,17 @@ class Logon extends React.Component {
         <FormItem
             {...formItemLayout}
             label="公司规模"
-        >
-        	{getFieldDecorator('c[size]',{
-        		initialValue:1
-        	})(
-        		<InputNumber min={1} max={10000} />
-        	)}
-        </FormItem>
+            >
+          {getFieldDecorator('c[size]', {
+                initialValue: this.state.size,           
+            })(
+                <RadioGroup>
+              <Radio value="0">100人以下</Radio>
+              <Radio value="1">1000人以下</Radio>
+              <Radio value="2">1000人以上</Radio>
+            </RadioGroup>
+            )}
+        </FormItem>        
         <FormItem
             {...formItemLayout}
             label="公司地址"

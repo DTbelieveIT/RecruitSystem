@@ -25,5 +25,7 @@ module.exports = {
 	},
 	session:{
 		cookieSecret:'secret'
-	}
+	},
+	//生成Token的密钥
+	jwtSecret:'gdt',
 }

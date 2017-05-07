@@ -53,10 +53,15 @@ module.exports = {
         use:{
           loader:'babel-loader',
           options:{
-            presets:['es2015','react','stage-0']
+            presets:['es2015','react','stage-0'],
+            plugins:['transform-decorators-legacy']
           }
         }
-      }
+      },
+      {
+        test: /\.(jpe?g|png|woff|svg|eot|ttf)$/,
+        use: 'url-loader?limit=4092&name=images/[name].[ext]'
+      },      
     ]
   },
   devServer:{

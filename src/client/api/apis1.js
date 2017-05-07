@@ -1,4 +1,4 @@
-import {dictToString,dictToJson} from './util'
+import {dictToString,dictToJson} from '../util/util'
 // import 'whatwg-fetch'
 // import Promise from 'promise-polyfill'
 

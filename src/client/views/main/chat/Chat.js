@@ -1,6 +1,6 @@
 import React , { Component }from 'react'
 import {connect} from 'react-redux'
-import ChatPanel from '../components/ChatPanel';
+import ChatPanel from '../../../components/ChatPanel';
 
 
 class Chat extends Component {

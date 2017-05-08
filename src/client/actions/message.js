@@ -1,28 +1,62 @@
-import {
-	ADDMESSAGE,GETHISTORYMESSAGE,UPDATEMESSAGE
-} from '../constants/Const'
+import store from '../store/ConfigStore'
+import {ADDMESSAGE,GETHISTORYMESSAGE,UPDATEMESSAGE} from '../constants/Const'
+import api from '../api/apis.js'
 
-export function addMessage(data){
-	return {
-		type:ADDMESSAGE,
-		data
+let dispatch = store.dispatch
+
+const actions = {
+	getHistoryMessage:function(){
+		return new Promise(resolve => {
+			api({
+				method:'GET',
+				path:'/getHistoryMessage',
+			}).then(response => {
+				if(response.status === 200){
+					dispatch({
+						type:GETHISTORYMESSAGE,
+						message:response.message,
+					})
+				}
+				resolve(response)
+			})
+		})
+	},
+	addMessage:function(data){
+		return new Promise(resolve => {
+			dispatch({
+				type:ADDMESSAGE,
+				data
+			})
+		})
+	},
+	updateMessage:function(data){
+		return new Promise(resolve => {
+			dispatch({
+				type:UPDATEMESSAGE,
+				data
+			})
+			resolve(response)
+		})
+	},
+	sendMessage:function(data){
+		console.log('send')
+		let myMessage = {
+			content:data.content,
+			from:{
+				account:data.me
+			}
+		}
+		// this.addMessage()
 	}
 }
+// export const sendMessage = function(data) {
+// 	console.log('send')
+// 	let myMessage = {
+// 		content:data.content,
+// 		from:{account:data.me}
+// 	}
+// 	dispatch(addMessage(myMessage))
+// 	socket.emit('message', data)
+// }
 
-
-export const getHistoryMessage = (path) => {
-	return (dispatch, getState) => {
-		fetch(path)
-		.then(res=>res.json())
-        .then((data) =>{
-        	dispatch({type:GETHISTORYMESSAGE,data})
-        })
-	}
-}
-
-export function updateMessage(data){
-	return {
-		type:UPDATEMESSAGE,
-		data
-	}
-}
+export default actions

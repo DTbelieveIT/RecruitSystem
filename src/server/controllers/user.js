@@ -1,15 +1,14 @@
 import path from 'path'
 import _ from 'underscore'
-
 import User from '../models/user'
 import Adminstrator from '../models/adminstrator'
 import Recruitment from '../models/recruitment'
 import Person from '../models/person'
 import Company from '../models/company'
 import Job from '../models/job'
-
 import appConfig from '../../../config/app.config'
 import bcrypt from 'bcrypt-nodejs'
+
 let {upload} = appConfig
 
 exports.signup = async (req,res) => {
@@ -129,7 +128,6 @@ exports.updateInfo = async (req,res) => {
 	}
 
 	if(user.role === 0){
-
 		//普通用户更新信息
 		let _job = await Job.findOne({name:info.resume.job.name},function(err,job){
 			if(err) console.log(err)
@@ -141,7 +139,6 @@ exports.updateInfo = async (req,res) => {
 		info.resume.job._id = _job._id
 		info.resume.job.name = _job.name
 		let personOldInfo = await Person.queryAllByAcountId(user._id)
-		
 		//简历和作品上传即更新旧Person的path
 		if(info.files && _.every(info.files,function(file){return file.status === 'done'})){
 			let resumePath = _.map(info.files,function(file){return path.join(upload.file.uploadUrl,file.response.files[0].name)})
@@ -149,6 +146,11 @@ exports.updateInfo = async (req,res) => {
 		}
 
 		let personInfo = _.extend(personOldInfo,info)
+		console.log(1111111111)
+		console.log(personOldInfo.resume.path)
+		console.log(info.resume.path)
+		console.log(personInfo.resume.path)
+		console.log(1111111111)
 		newInfo = await personInfo.save()
 	}else if(user.role === 1){
 		//企业用户更新信息

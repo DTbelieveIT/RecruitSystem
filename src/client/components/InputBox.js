@@ -1,11 +1,10 @@
 import React , { Component }from 'react'
 import {connect} from 'react-redux'
+import message from '../actions/message'
 
 import './InputBox.less'
-import {sendMessage} from '../socket'
 
 class InputBox extends Component {
-
     handleInputKeyDown = (e) => {
         // 过滤tab键
         if (e.keyCode === 9) {
@@ -20,7 +19,7 @@ class InputBox extends Component {
             if (message.trim() === '') {
                 return;
             }
-            sendMessage({meId:this.props.meId,linkmanId:this.props.linkmanId,content:message,me:this.props.me})
+            message.sendMessage({meId:this.props.meId,linkmanId:this.props.linkmanId,content:message,me:this.props.me})
         }        
     }
 

@@ -61,14 +61,14 @@ fs.readdir(`${__dirname}/route`,(err,result) => {
 
 //socket handle
 io.on('connection', function (socket) {
-	console.log('socket已连接')
+	console.log('socket: (' + socket.id + ') 已连接')
 
 	socket.on('message', function (data,cb) {
 		router.handle(io,socket,data,cb)
 	});
 
 	socket.on('disconnect',function(){
-		console.log('socket已断开')
+		console.log('socket: (' + socket.id + ') 已断开')
 	})
 
 });

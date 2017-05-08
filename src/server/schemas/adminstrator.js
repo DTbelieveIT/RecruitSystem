@@ -18,15 +18,6 @@ let AdminstratorSchema = new mongoose.Schema({
 	}
 })
 
-AdminstratorSchema.pre('save',function(next){
-	// var user = this
-	// console.log('-------------------------')
-	// console.log(user)
-	// console.log('-------------------------')
-	// user.password = 'preson'
-	next()
-})
-
 AdminstratorSchema.statics = {
 	fetch:function(cb){
 		return this

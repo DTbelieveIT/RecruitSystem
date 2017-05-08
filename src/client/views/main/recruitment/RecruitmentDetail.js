@@ -5,7 +5,6 @@ import defineHistory from '../../../history'
 import _ from 'underscore'
 import moment from 'moment'
 import { Card,Button } from 'antd'
-import VRecruitmentDetail from '../../../virtual_data/RecruitmentDetail'
    
 class RecruitmentDetail extends React.Component {
 	constructor(props){
@@ -25,7 +24,7 @@ class RecruitmentDetail extends React.Component {
 	  <div style={{ background: '#ECECEC', padding: '30px' }}>
 	    <Card title={`${job.name}(${company.address})`} bordered={false} style={{ width: '100%',height:550 }}>
 		    <p>公司:{company.name}</p>
-		    <p>公司规模:{company.size}</p>
+		    <p>公司规模:{company.size === '0' ? '少于100人':(company.size === '1' ? '少于100人多于1000人' : '多于1000人' )}</p>
 		    <p>公司成立时间:{moment(company.foundAt).format('YYYY-MM-DD')}</p>
 		    <p>招聘人数:{recruitNum}</p>
 		    <p>已投人数:{person.length}</p>

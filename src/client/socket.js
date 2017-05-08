@@ -1,4 +1,5 @@
-let socketClient = require('socket.io-client')
+import appConfig from '../../config/app.config'
+import socketClient from 'socket.io-client'
 
 function createInterface(method) {
     return function (path, data, cb) {
@@ -23,7 +24,10 @@ function socketWrap(socket) {
     return socket;
 }
 
-// const serverUrl = process.env.NODE_ENV === 'production' ?
-//     `http://${config.server}:${config.port}/` :
-//     `http://${config.devServer}:${config.devPort}/`;
-export default socketWrap(socketClient());
+const serverUrl = process.env.NODE_ENV === 'production' ?
+    `http://${appConfig.server}:${appConfig.port}/` :
+    `http://${appConfig.serverDev}:${appConfig.portDev}/`
+console.log(process.env.NODE_ENV)
+console.log(serverUrl)
+
+export default socketWrap(socketClient(serverUrl));

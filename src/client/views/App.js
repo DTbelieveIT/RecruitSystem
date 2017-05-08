@@ -54,6 +54,11 @@ class App extends Component {
 				            }}
 				            >
 				        <Menu.Item key="setting">
+ 							<Link to="/main/recruitmentList">
+                            	<span className="nav-text">招聘信息列表</span>
+                        	</Link>
+				        </Menu.Item>				            
+				        <Menu.Item key="setting">
  							<Link to="/">
                             	<span className="nav-text">简历管理</span>
                         	</Link>

@@ -1,7 +1,6 @@
 //controllers
 import User from '../src/server/controllers/user'
 import Recruitment from '../src/server/controllers/recruitment'
-import File from '../src/server/controllers/file'
 import Message from '../src/server/controllers/message'
 
 module.exports = function(app){
@@ -9,7 +8,6 @@ module.exports = function(app){
 	app.post('/api/logon',User.signup)
 	app.post('/api/login',User.signin)
 	app.post('/api/updateInfo',User.updateInfo)
-	app.get('/api/test',User.test)
 
 	//Recruitment
 	app.post('/api/addRecruitment',Recruitment.addRecruitment)
@@ -18,4 +16,7 @@ module.exports = function(app){
 
 	//Message
 	app.get('/api/getHistoryMessage',Message.getHistoryMessage)
+
+	//test api
+	app.get('/api/test',User.test)
 }

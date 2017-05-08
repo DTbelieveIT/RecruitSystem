@@ -1,9 +1,9 @@
 import React,{ Component , PropTypes} from 'react'
 import {connect} from 'react-redux'
+import { Col, Row } from 'antd';
 import defineHistory from '../../../history'
 import RecruitmentItem from '../../../components/RecruitmentItem';
 import recruitment from '../../../actions/recruitment'
-import { Col, Row } from 'antd';
 
 class RecruitmentList extends React.Component {
 	constructor(props){

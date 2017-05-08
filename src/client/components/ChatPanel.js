@@ -1,12 +1,10 @@
 import React , { Component }from 'react'
 import {connect} from 'react-redux'
-import {GETHISTORYMESSAGE} from '../constants/Const'
-import {getHistoryMessage} from '../actions/message'
-
-import './chatPanel.less'
-
 import MessageList from '../components/MessageList'
 import InputBox from '../components/InputBox'
+import message from '../actions/message'
+
+import './chatPanel.less'
 
 class ChatPanel extends Component {
     constructor(props){
@@ -14,7 +12,7 @@ class ChatPanel extends Component {
     }
 
     componentDidMount(){
-        this.props.dispatch(getHistoryMessage('/api/getHistoryMessage'))
+        message.getHistoryMessage()
     }
 
     render() {
@@ -52,9 +50,9 @@ class ChatPanel extends Component {
 
 function mapStateToProps(state){
     return {
-        meId:state.loginReducer.data.user._id,
-        me:state.loginReducer.data.user.account,
-        info:state.messageReducer.message.result || []
+        meId:state.user.user._id,
+        me:state.user.user.account,
+        info:state.message.message || []
     }
 }
 

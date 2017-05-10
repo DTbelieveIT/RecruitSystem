@@ -40,12 +40,8 @@ const actions = {
 	},
 	sendMessage:function(data){
 		console.log('send')
-		let myMessage = {
-			content:data.content,
-			from:{
-				account:data.me
-			}
-		}
+		let myMessage = {...data}
+		console.log(myMessage)
 		// this.addMessage()
 	}
 }

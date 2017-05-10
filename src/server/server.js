@@ -21,7 +21,6 @@ mongoose.connection.on('error',() => {
 var redisClient = redis.createClient(appConfig.redis.port,appConfig.host)
 
 var isDev = process.env.NODE_ENV !== 'production'
-var p
 var portDev = appConfig.portDev
 var sessionMiddle = session({
 	secret: appConfig.session.cookieSecret,

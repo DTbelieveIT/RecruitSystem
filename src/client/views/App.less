@@ -1,10 +1,54 @@
-.app .logo {
-  width: 120px;
-  height: 30px;
-  background:url(../images/logo_font.png);
-  background-size:cover;
-  background-repeat:no-repeat;
-  border-radius: 6px;
-  margin: 16px 24px 16px 0;
-  float: left;
+.app {
+/*	.logo {
+	  width: 120px;
+	  height: 30px;
+	  background:url(../images/logo_font.png);
+	  background-size:cover;
+	  background-repeat:no-repeat;
+	  border-radius: 6px;
+	  margin: 16px 24px 16px 0;
+	  float: left;
+	}*/
+
+	.trigger {
+	  font-size: 18px;
+	  line-height: 64px;
+	  padding: 0 16px;
+	  cursor: pointer;
+	  transition: color .3s;
+	}
+
+	.trigger:hover {
+	  color: #108ee9;
+	}
+	.logo {
+	  height: 32px;
+	  border-radius: 6px;
+	  margin: 16px;
+  
+	}
+
+	.logo-long{
+		width:168px;
+		background:url(../images/logo_long.png);  	
+		background-size:cover;
+		background-position:center;
+		background-repeat:no-repeat;	
+	}
+
+	.logo-short{
+		width:32px;
+		background:url(../images/logo_short.png);
+		background-size:cover;
+		background-position:center;
+		background-repeat:no-repeat;	
+	}
+
+	.ant-layout-sider-collapsed .anticon {
+	  font-size: 16px;
+	}
+
+	.ant-layout-sider-collapsed .nav-text {
+	  display: none;
+	}
 }

@@ -1,6 +1,7 @@
 import React , { Component }from 'react'
 import {connect} from 'react-redux'
 import ChatPanel from '../../../components/ChatPanel';
+import _ from 'underscore'
 
 
 class Chat extends Component {
@@ -13,11 +14,15 @@ class Chat extends Component {
 }
 
 function mapStateToProps(state,ownProps){
+	//公司id
 	let linkmanId = ownProps.params.id
-	let linkman = ownProps.params.account
+	let linkman = _.filter(state.recruitment.infos || [],function(info){
+		return info.company._id === linkmanId
+	})
+
 	return {
-		linkmanId:linkmanId,
-		linkman:linkman
+		linkmanId:linkman[0].company._id,//企业用户id
+		linkman:linkman[0],//企业用户详细信息
 	}
 }
 

@@ -86,7 +86,7 @@ render((
 					<Route path="recruitmentList" getComponent={RecruitmentList}/>
 					<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
 					<Route path="setting" getComponent={Setting}/>
-					<Route path="/chat/:id/:account" getComponent={Chat} />			
+					<Route path="/chat/:id" getComponent={Chat} />			
 				</Route>
 			</Route>
 		</Router>

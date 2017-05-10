@@ -1,8 +1,4 @@
 import React , { Component }from 'react'
-import {connect} from 'react-redux'
-import message from '../actions/message'
-
-import './InputBox.less'
 
 class InputBox extends Component {
     handleInputKeyDown = (e) => {
@@ -19,7 +15,6 @@ class InputBox extends Component {
             if (message.trim() === '') {
                 return;
             }
-            message.sendMessage({meId:this.props.meId,linkmanId:this.props.linkmanId,content:message,me:this.props.me})
         }        
     }
 
@@ -39,8 +34,4 @@ class InputBox extends Component {
     }
 }
 
-function mapStateToProps(state,ownProps){
-    return {}
-}
-
-module.exports = connect(mapStateToProps)(InputBox)
+module.exports = InputBox

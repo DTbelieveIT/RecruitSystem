@@ -20,8 +20,9 @@ class RecruitmentDetail extends React.Component {
 
   render() {
   	const {company,job,person,detail,recruitNum,salary,educationRequire,meta} = this.props.info
+  	console.log(company)
     return (
-	  <div style={{ background: '#ECECEC', padding: '30px' }}>
+	  <div>
 	    <Card title={`${job.name}(${company.address})`} bordered={false} style={{ width: '100%',height:550 }}>
 		    <p>公司:{company.name}</p>
 		    <p>公司规模:{company.size === '0' ? '少于100人':(company.size === '1' ? '少于100人多于1000人' : '多于1000人' )}</p>
@@ -34,7 +35,7 @@ class RecruitmentDetail extends React.Component {
 		    <p>创建时间:{moment(meta.createAt).format('YYYY-MM-DD')}</p>
 		    <img src={company.company.imgPath} alt="" style={{  width: 150,height: 150}} />
 		    <div>
-		        <Button type="default" onClick={()=>{defineHistory.push(`/chat/${company.company._id}/${company.company.account}`)}}>发起聊天</Button>
+		        <Button type="default" onClick={()=>{defineHistory.push(`/chat/${company._id}`)}}>发起聊天</Button>
 		    </div>
 		    {
 		    	this.props.user&&this.props.user.role===0 ? (<div>

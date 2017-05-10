@@ -21,7 +21,7 @@ class ChatPanel extends Component {
 
         return (
             <div className="chat-panel">
-                <div>与{linkman}的聊天页面</div>
+                <h1>与<strong>{linkman.company.name}</strong>的聊天页面</h1>
                 <MessageList.container
                     // linkmanId={linkman.get('_id')}
                     // linkmanType={linkman.get('type')}
@@ -42,7 +42,7 @@ class ChatPanel extends Component {
                         // ))
                     }
                 </MessageList.container>
-                <InputBox linkmanId={linkmanId} meId={this.props.meId} me={this.props.me}/>
+                <InputBox linkmanId={linkmanId} meId={this.props.meId} />
             </div>         
         )
     }
@@ -51,7 +51,6 @@ class ChatPanel extends Component {
 function mapStateToProps(state){
     return {
         meId:state.user.user._id,
-        me:state.user.user.account,
         info:state.message.message || []
     }
 }

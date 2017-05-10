@@ -27,25 +27,9 @@ module.exports = {
   target:'web',
   module:{
     rules:[
-      {
-        test:/\.css$/,
-        use:extractCss.extract({
-          fallback:'style-loader',
-          use:{
-            loader:'css-loader',
-            options:{
-              modules:true,
-              devtool:'source-map'
-            }
-          }
-        })
-      },
-      {
-        test:/\.less$/,
-        use:extractLess.extract({
-          fallback:'style-loader',
-          use:['css-loader', 'less-loader']
-        })
+      { 
+        test: /\.less/, 
+        use: ["style-loader", "css-loader", "less-loader"]
       },
       {
         test:/\.js$/,

@@ -39,3 +39,27 @@ var CleanWebpackPlugin = require('clean-webpack-plugin');
       dry: false
     })
 ```
+3. Mongoose update时遇到的问题，主要是Mongoose与Mongo更新文档的差异
+```js
+let result = await Msg.update({to:meId,readed:false},{$set:{readed:true}},{multi:true})
+//mongoose update报错
+let result = await Msg.update({to:meId,readed:false},{$set:{readed:true}},false,true)
+
+//mongo update正确
+db.getCollection('msgs').update({to:ObjectId("590ffd773586461fb469c86b"),readed:true},{$set:{readed:false}},false,true)
+
+```
+4. less文件打包
+```js
+{
+    test: /\.less$/,
+     use: extractLess.extract({
+         fallback: 'style-loader',
+         use: ['css-loader', 'less-loader']
+     })
+ },
+
+VS
+
+{ test: /\.less/, use: ["style-loader", "css-loader", "less-loader"]},
+```

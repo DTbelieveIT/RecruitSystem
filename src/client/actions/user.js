@@ -83,9 +83,6 @@ const actions = {
 				path:'/updateInfo',
 				query:{...userinfo}
 			}).then(response => {
-				console.log(2222222222)
-				console.log(response)
-				console.log(2222222222)
 				dispatch({
 					type:UPDATEINFO,
 					user:response.user,
@@ -108,6 +105,17 @@ const actions = {
 						info:response.data.info,
 					})
 				}
+				resolve(response)
+			})
+		})
+	},
+	getUserInfo:function(userid){
+		return new Promise(resolve => {
+			api({
+				method:'GET',
+				path:'/getUserInfo',
+				query:{userid}
+			}).then(response => {
 				resolve(response)
 			})
 		})

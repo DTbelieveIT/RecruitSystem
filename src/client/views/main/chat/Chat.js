@@ -2,11 +2,50 @@ import React , { Component }from 'react'
 import {connect} from 'react-redux'
 import ChatPanel from '../../../components/ChatPanel';
 import _ from 'underscore'
-
+import user from '../../../actions/user'
+ 
+import './Chat.less'
 
 class Chat extends Component {
+	constructor(props){
+		super(props)
+		this.state ={
+			linkman:{},
+		}
+	}
+
+	componentWillMount(){
+		//获取联系人信息
+		let {linkmanId} =  this.props
+		user
+		.getUserInfo(linkmanId)
+		.then(result => {
+			this.setState({
+				linkman:result.info
+			})
+		})
+	}
+
+    componentDidUpdate(){
+        let {linkmanId} = this.props
+        let {linkman} = this.state     
+        let id = linkman.person && linkman.person._id || linkman.company&&linkman.company._id
+        if(linkmanId === id){
+            return;
+        }
+		user
+		.getUserInfo(linkmanId)
+		.then(result => {
+			window.localStorage.setItem('linkman',result.info)
+			this.setState({
+				linkman:result.info
+			})
+		})      	
+    }
+
 	render() {
-		const {linkmanId,linkman} =  this.props
+		const {linkmanId} =  this.props
+		const {linkman} = this.state || window.localStorage.getItem('linkman')
 		return (
 			<ChatPanel linkmanId={linkmanId} linkman={linkman}/>		
 		)
@@ -14,15 +53,11 @@ class Chat extends Component {
 }
 
 function mapStateToProps(state,ownProps){
-	//公司id
+	//聊天对象的用户id
 	let linkmanId = ownProps.params.id
-	let linkman = _.filter(state.recruitment.infos || [],function(info){
-		return info.company._id === linkmanId
-	})
 
 	return {
-		linkmanId:linkman[0].company._id,//企业用户id
-		linkman:linkman[0],//企业用户详细信息
+		linkmanId:linkmanId
 	}
 }
 

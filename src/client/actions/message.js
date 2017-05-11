@@ -1,58 +1,69 @@
 import store from '../store/ConfigStore'
-import {ADDMESSAGE,GETHISTORYMESSAGE,UPDATEMESSAGE} from '../constants/Const'
-import api from '../api/apis.js'
+import {GETUNREADMESSAGE,GETLINKMANS,MSGINITIALIZE,UPDATEMESSAGE} from '../constants/Const'
+import api from '../api/apis'
+import socket from '../socket'
 
 let dispatch = store.dispatch
 
 const actions = {
-	getHistoryMessage:function(){
+	init:function(){
+		dispatch({
+			type:MSGINITIALIZE
+		})
+	},
+	getHistoryMessage:function(data){
 		return new Promise(resolve => {
-			api({
-				method:'GET',
-				path:'/getHistoryMessage',
-			}).then(response => {
+			socket.get('/getHistoryMessage',data,response => {
 				if(response.status === 200){
 					dispatch({
-						type:GETHISTORYMESSAGE,
-						message:response.message,
+						type:UPDATEMESSAGE,
+						data:response.data.data,
 					})
+				}
+				resolve(response)
+			})
+		})		
+	},
+	addMessage:function(data){
+		return new Promise(resolve => {
+			socket.post('/addMessage',data,response => {
+				resolve(response)
+			})
+		})
+	},
+	getUnreadMessage:function(userid){
+		return new Promise(resolve => {
+			socket.get('/getUnreadMessage',userid,response => {
+				if(response.status === 200){
+					if(response.data.length){
+						console.log(`你有${response.data.length}条未读消息`)
+						dispatch({
+							type:'GETUNREADMESSAGE',
+							msgList:response.data
+						})
+					}
+				}			
+				resolve(response)
+			})
+		})
+	},
+	getLinkmans:function(userid){
+		return new Promise(resolve => {
+			socket.get('/getLinkmans',userid,response => {
+				if(response.status === 200){
+					if(response.data.length){
+						console.log(`你有${response.data.length}个联系人`)
+						dispatch({
+							type:'GETLINKMANS',
+							linkmans:response.data
+						})
+					}
 				}
 				resolve(response)
 			})
 		})
 	},
-	addMessage:function(data){
-		return new Promise(resolve => {
-			dispatch({
-				type:ADDMESSAGE,
-				data
-			})
-		})
-	},
-	updateMessage:function(data){
-		return new Promise(resolve => {
-			dispatch({
-				type:UPDATEMESSAGE,
-				data
-			})
-			resolve(response)
-		})
-	},
-	sendMessage:function(data){
-		console.log('send')
-		let myMessage = {...data}
-		console.log(myMessage)
-		// this.addMessage()
-	}
 }
-// export const sendMessage = function(data) {
-// 	console.log('send')
-// 	let myMessage = {
-// 		content:data.content,
-// 		from:{account:data.me}
-// 	}
-// 	dispatch(addMessage(myMessage))
-// 	socket.emit('message', data)
-// }
+
 
 export default actions

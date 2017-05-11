@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import {Link} from 'react-router'
 import defineHistory from '../history'
 import user from '../actions/user'
+import mymessage from '../actions/message'
 import ui from '../actions/ui'
 
 class MDropdown extends React.Component {
@@ -15,12 +16,13 @@ class MDropdown extends React.Component {
         user
             .logout()
             .then(response => {
-                console.log(response)
                 if (response.status === 200) {
                     defineHistory.push('/')
                     window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('userid');
                     ui.openNotification('logout success')
-                    user.init();
+                    user.init()
+                    mymessage.init()
                 }
             })
     }

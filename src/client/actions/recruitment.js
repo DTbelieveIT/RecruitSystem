@@ -11,7 +11,6 @@ const actions = {
 				method:'GET',
 				path:'/queryJobList',
 			}).then(response => {
-				console.log(response)
 				if(response.status === 200){
 					dispatch({
 						type:QUERYJOBLIST,
@@ -29,7 +28,6 @@ const actions = {
 				path:'/addRecruitment',
 				query:{...data}
 			}).then(response => {
-				console.log(response)
 				resolve(response)
 			})
 		})
@@ -40,7 +38,6 @@ const actions = {
 				method:'GET',
 				path:'/recruitmentList'
 			}).then(response => {
-				console.log(response)
 				dispatch({
 					type:RECRUITMENTLIST,
 					infos:response.infos,

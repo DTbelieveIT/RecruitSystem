@@ -8,6 +8,7 @@ module.exports = function(app){
 	app.post('/api/logon',User.signup)
 	app.post('/api/login',User.signin)
 	app.post('/api/updateInfo',User.updateInfo)
+	app.get('/api/getUserInfo',User.getUserInfo)
 
 	//Recruitment
 	app.post('/api/addRecruitment',Recruitment.addRecruitment)

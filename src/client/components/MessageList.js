@@ -4,17 +4,11 @@ import {connect} from 'react-redux'
 import './MessageList.less'
 
 class MessageList extends Component {
-
-    handleInputKeyDown = () => {
-
-    }
-
     render() {
         return (
             <div
                 className="message-list"
                 ref={list => this.list = list}
-                onScroll={this.handleOnScroll}
             >
                 { this.props.children }
             </div>    
@@ -24,24 +18,29 @@ class MessageList extends Component {
 
 class Message extends Component {
     render() {
-        const { linkmanId,message } = this.props
+        const { linkman,message,createAt,imgPath,me} = this.props
         return (
             <div
                 className={'message-list-item'}
                 ref={dom => this.dom = dom}
             >
-                 {linkmanId}{' : '}{ message }
+                <div className={me ? 'message me' : 'message'}>
+                    <img className="message-image" src={imgPath} />
+                    <div>
+                        <div>
+                            <span className="message-username">{linkman}</span>
+                            <span>{createAt}</span>
+                        </div>
+                        <div className="text">{message}</div>
+                    </div>
+                </div>
             </div>   
         )
     }
 }
 
 
-function mapStateToProps(state,ownProps){
-    return {}
-}
-
 module.exports = {
     container: MessageList,
-    item: connect(mapStateToProps)(Message)
+    item: Message,
 }

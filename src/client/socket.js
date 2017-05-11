@@ -27,7 +27,4 @@ function socketWrap(socket) {
 const serverUrl = process.env.NODE_ENV === 'production' ?
     `http://${appConfig.server}:${appConfig.port}/` :
     `http://${appConfig.serverDev}:${appConfig.portDev}/`
-console.log(process.env.NODE_ENV)
-console.log(serverUrl)
-
 export default socketWrap(socketClient(serverUrl));

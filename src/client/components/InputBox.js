@@ -1,4 +1,8 @@
 import React , { Component }from 'react'
+import message from '../actions/message'
+import moment from 'moment'
+
+import './InputBox.less'
 
 class InputBox extends Component {
     handleInputKeyDown = (e) => {
@@ -10,11 +14,19 @@ class InputBox extends Component {
         if (e.keyCode === 13 && !e.shiftKey) {
             e.preventDefault();
 
-            const message = this.input.value;
+            const msg = this.input.value;
             this.input.value = '';
-            if (message.trim() === '') {
+            if (msg.trim() === '') {
                 return;
             }
+
+            message
+            .addMessage({content:msg,meId:this.props.meId,linkmanId:this.props.linkmanId})
+            .then(result => {
+                if(result.status === 200){                    
+                    this.props.handleInput({content:result.data.content,account:result.data.from.account,imgPath:result.data.from.imgPath,from:result.data.from._id,createAt:moment(result.data.meta.createAt).format('YYYY-MM-DD HH:mm:ss')})
+                }
+            })
         }        
     }
 

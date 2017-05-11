@@ -2,21 +2,15 @@ import User from '../models/user'
 import Adminstrator from '../models/adminstrator'
 import Person from '../models/person'
 import Company from '../models/company'
-import Auth from '../models/auth'
 import jwt from 'jwt-simple'
 import isLogin from '../police/isLogin'
 import appConfig from '../../../config/app.config'
+import mysocket from '../socket'
 
 const AuthRoute = {
 	'POST /auth':async function(data){
 		let _user = data,isMatch = false,info
 		let {account,password} = _user
-
-		let auths = await Auth.find({clients:this.socket.id})
-		if(auths.length > 0){
-			console.log('已经登录')
-			return this.end(500,'you have login')
-		}
 
 		await User.findOne({
 			account
@@ -36,22 +30,23 @@ const AuthRoute = {
 		if(!isMatch){
 			return this.end(500,'password is not match')
 		}
-		
-		this.socket.join('system')
+
+		//判断用户是否在线
+		if(mysocket.checkIsOnline(_user._id)){
+			console.log('sorry,you have login,please logout first!')
+			return this.end(500,'sorry,you have login,please logout first!')
+		}
+
+		//用户id对应sid
+		console.log('++++++++++++++++++++++++')
+		console.log('新加入的user'+_user._id)
+		console.log('新加入的socketid'+this.socket.id)
+		mysocket.uTos(_user._id,this.socket.id)
+		console.log('++++++++++++++++++++++++')
 
 		//生成token
 		let token = jwt.encode({userId:_user._id,ip:this.socket.handshake.address,expires:Date.now() + (1000 * 60 * 60 * 24 * 7)},appConfig.jwtSecret)
 
-		let auth = await Auth.findOne({user:_user.id})
-		if(!auth){
-			auth = new Auth({
-				user:_user.id,
-				clients:[this.socket.id]
-			})
-		}else{
-			auth.clients.push(this.socket.id)
-		}
-		await auth.save()
 		//获取用户详细信息
 		if(_user.role === 0){
 			info = await Person.queryAllByAcountId(_user._id)
@@ -67,40 +62,31 @@ const AuthRoute = {
 		if(!auth){
 			return this.end(500,'you have not login')
 		}
-		this.socket.leave('system')
-		if(auth.clients.length === 1){
-			await auth.remove()
-		}else{
-			let index = auth.clients.indexOf(this.socket.id)
-			auth.clients.splice(index,1)
-			await auth.save()
-		}
+
+		//用户登出时删除该socket的所有对应关系
+		mysocket.delSocket(this.socket.id)
+
 		this.end(200)
 	},
 	'POST /auth/re':async function(data){
 		let info
 		isLogin(this.socket,data,this.end)
 
-		let auths = await Auth.find({clients:this.socket.id})
-
-		if(auths.length > 0) {
-			return this.end(401,'you have login,please logout first')
-		}
-
 		//获取用户账号信息
 		let _user = await User.findOne({_id:this.socket.user},'-password')
-		this.socket.join('system')
 
-		let auth = await Auth.findOne({user:_user._id})
-		if(!auth){
-			auth = new Auth({
-				user:_user._id,
-				clients:[this.socket.id]
-			})
-		}else{
-			auth.clients.push(this.socket.id)
+		//判断用户是否在线
+		if(mysocket.checkIsOnline(_user._id)){
+			console.log('sorry,you have login,please logout first!')
+			return this.end(500,'sorry,you have login,please logout first!')
 		}
-		await auth.save()
+
+		//用户id对应sid
+		console.log('++++++++++++++++++++++++')
+		console.log('重连的user'+_user._id)
+		console.log('重连的socketid'+this.socket.id)
+		mysocket.uTos(_user._id,this.socket.id)
+		console.log('++++++++++++++++++++++++')
 
 		//获取用户详细信息
 		if(_user.role === 0){
@@ -111,7 +97,7 @@ const AuthRoute = {
 			info = await Adminstrator.queryAllByAcountId(_user._id)
 		}
 
-		console.log('已重连')
+		console.log('用户已重连')
 		return this.end(200,{user:_user,info:info})
 	},
 }

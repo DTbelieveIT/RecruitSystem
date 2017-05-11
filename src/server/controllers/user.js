@@ -8,6 +8,7 @@ import Company from '../models/company'
 import Job from '../models/job'
 import appConfig from '../../../config/app.config'
 import bcrypt from 'bcrypt-nodejs'
+import mysocket from '../socket'
 
 let {upload} = appConfig
 
@@ -97,13 +98,11 @@ exports.signin = async (req,res) => {
 		}
 		_user = user
 	})
-	console.log(_user)
 	if(!_user){
 		return res.send({status:500,result:'user not exist'})
 	}
 
 	isMatch = _user.comparePassword(password,_user.password)
-	console.log(isMatch)
 	if(isMatch){
 		res.send({status:200,user:_user})
 	}
@@ -146,11 +145,6 @@ exports.updateInfo = async (req,res) => {
 		}
 
 		let personInfo = _.extend(personOldInfo,info)
-		console.log(1111111111)
-		console.log(personOldInfo.resume.path)
-		console.log(info.resume.path)
-		console.log(personInfo.resume.path)
-		console.log(1111111111)
 		newInfo = await personInfo.save()
 	}else if(user.role === 1){
 		//企业用户更新信息
@@ -166,17 +160,27 @@ exports.updateInfo = async (req,res) => {
 	res.send({status:200,info:newInfo,user:user})
 }
 
+exports.getUserInfo = async (req,res) => {
+	let {userid} = req.query
+	let info = await User.getUserInfoById(userid)
+	res.send({info:info})
+}
+
 exports.test  = async (req,res) => {
-	let {id,uid} = req.query
-	let info = await Recruitment.fetchById(id)
-	console.log(info.person)
-	let result = info.person.find(function(person){
-		//严格等于时不相等，可能是ObjectId类型
-		return person._id == uid
-	})
-	if(!result){
-		console.log('新投递者')
-		await Recruitment.update({_id:id},{$push:{person:uid}})
-	}
-	res.send({result:info})
+	mysocket.current()
+	res.send({status:'ok'})
+	// let {id,uid} = req.query
+	// let info = await Recruitment.fetchById(id)
+	// console.log(info.person)
+	// let result = info.person.find(function(person){
+	// 	//严格等于时不相等，可能是ObjectId类型
+	// 	return person._id == uid
+	// })
+	// if(!result){
+	// 	console.log('新投递者')
+	// 	await Recruitment.update({_id:id},{$push:{person:uid}})
+	// }
+	// res.send({result:info})
+
+
 }

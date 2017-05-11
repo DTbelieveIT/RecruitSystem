@@ -4,6 +4,7 @@ import defineHistory from '../../history'
 import { Link } from 'react-router'
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import user from '../../actions/user'
+import mymessage from '../../actions/message'
 import ui from '../../actions/ui'
 
 import './Login.less'
@@ -24,10 +25,19 @@ class Login extends Component {
                     .login(values)
                     .then(result => {
                         if(result.status === 200){
+                            let userid = result.data.user._id
                             window.localStorage.setItem('token',result.data.token)
+                            window.localStorage.setItem('userid',result.data.user._id)
                             ui.openNotification('login success')
                             defineHistory.push('/')
                             user.online()
+                            //获取未读消息
+                            mymessage
+                            .getUnreadMessage({userid})   
+
+                            //获取所有联系人信息
+                            mymessage
+                            .getLinkmans({userid})                            
                         }else {
                             if(result.data === 'user not exist'){
                                 ui.openNotification('user not exist')

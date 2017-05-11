@@ -63,3 +63,48 @@ VS
 
 { test: /\.less/, use: ["style-loader", "css-loader", "less-loader"]},
 ```
+5. mongoose 不能直接使用$match匹配_id的解决
+问题定位：This is exactly what I answered with. A .find() can use the Schema which of course has a default type of ObjectId for the _id field. Aggregation pipelines do not use the Schema
+问题解决：
+http://www.cnblogs.com/neverstop/p/4581388.html
+http://stackoverflow.com/questions/36193289/moongoose-aggregate-match-does-not-match-ids
+https://github.com/Automattic/mongoose/issues/1399
+```js
+var Message = require('./models/message')
+var mongoose = require('mongoose')
+async function test(userid){
+  let linkmans = await Message.aggregate([{$match:{to:userid}},{$group:{_id:{from:"$from",to:"$to"},number:{$sum:1}}}]) //doesn't work
+  let linkmans = await Message.aggregate([{$match:{content:'hi'}},{$group:{_id:{from:"$from",to:"$to"},number:{$sum:1}}}]) //work
+  let linkmans = await Message.aggregate([{$match:{"to":new mongoose.Types.ObjectId(userid)}},{$group:{"_id":{"from":"$from","to":"$to"},"number":{$sum:1}}}]) //work
+  console.log(linkmans)
+}
+test('590ffdc43586461fb469c86f')
+```
+6. react es6组件写法总结
+react组件的值越级传递
+http://blog.csdn.net/liwusen/article/details/53408906
+```js
+//1 在组件内部的使用static
+static defaultProps = {
+    name:　...
+}
+static propTypes = {
+    name: PropTypes.string.isRequired
+};
+static contextTypes = {
+    router: React.PropTypes.object.isRequired,
+}
+
+//2 在组件外部
+Hello.defaultProps = {
+    name: ...
+}
+
+Hello.PropTypes = {
+    name: PropTypes.string.isRequired
+}
+
+Hello.contextTypes = {
+  name: React.PropTypes.string
+};
+```

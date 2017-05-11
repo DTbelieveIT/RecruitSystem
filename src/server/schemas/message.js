@@ -15,6 +15,14 @@ let MessageSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
+    msgType:{
+        type:String,
+        enum:['chat','resume'],
+    },
+    readed:{
+        type:Boolean,
+        default:false
+    },
 	meta:{
 		createAt:{
 			type:Date,
@@ -49,7 +57,7 @@ MessageSchema.statics = {
                 resolve(info)
             })
         })
-    }    
+    },
 };
 
 module.exports = MessageSchema

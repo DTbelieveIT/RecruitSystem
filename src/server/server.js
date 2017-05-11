@@ -6,10 +6,13 @@ var logger = require('morgan')
 var mongoose = require('mongoose')
 var upload = require('jquery-file-upload-middleware')
 var http = require('http')
-var session = require('express-session');
-var redis = require('redis')
-var RedisStore = require('connect-redis')(session);
+var util = require('./util/util')
+var {warn,error,notice} = util
+// var session = require('express-session');
+// var redis = require('redis')
+// var RedisStore = require('connect-redis')(session);
 var appConfig = require('../../config/app.config.js')
+var mysocket = require('./socket')
 
 //connect MongoDB
 mongoose.connect(appConfig.mongodb.database)
@@ -18,28 +21,28 @@ mongoose.connection.on('error',() => {
 })
 
 //create redis client
-var redisClient = redis.createClient(appConfig.redis.port,appConfig.host)
+// var redisClient = redis.createClient(appConfig.redis.port,appConfig.host)
 
 var isDev = process.env.NODE_ENV !== 'production'
 var portDev = appConfig.portDev
-var sessionMiddle = session({
-	secret: appConfig.session.cookieSecret,
-	store:new RedisStore({
-		client:redisClient
-	}),
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }	
-})
+// var sessionMiddle = session({
+// 	secret: appConfig.session.cookieSecret,
+// 	store:new RedisStore({
+// 		client:redisClient
+// 	}),
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: true }	
+// })
 var app = express()
 upload.configure(appConfig.upload.file);
 
 //socket.io
 var server = http.createServer(app)
 var io = require('socket.io')(server)
-io.use(function(socket, next) {
-    sessionMiddle(socket.request, socket.request.res, next);
-});
+// io.use(function(socket, next) {
+//     sessionMiddle(socket.request, socket.request.res, next);
+// });
 
 //socket router
 var router = require('./route/index')
@@ -60,14 +63,16 @@ fs.readdir(`${__dirname}/route`,(err,result) => {
 
 //socket handle
 io.on('connection', function (socket) {
-	console.log('socket: (' + socket.id + ') 已连接')
+	console.log(warn('socket: (' + socket.id + ') 已连接'))
+	mysocket.sTos(socket.id,socket)
 
 	socket.on('message', function (data,cb) {
 		router.handle(io,socket,data,cb)
 	});
 
 	socket.on('disconnect',function(){
-		console.log('socket: (' + socket.id + ') 已断开')
+		mysocket.delSocket(socket.id)
+		console.log(error('socket: (' + socket.id + ') 已断开'))
 	})
 
 });
@@ -102,7 +107,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static(path.join(__dirname,'../../public')))
 //session middleware
-app.use(sessionMiddle)
+// app.use(sessionMiddle)
 
 //express process route
 require('../../config/routes')(app)

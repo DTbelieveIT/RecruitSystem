@@ -1,5 +1,8 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt-nodejs'
+import Adminstrator from '../models/adminstrator'
+import Person from '../models/person'
+import Company from '../models/company'
 
 let UserSchema = new mongoose.Schema({
 	account:{
@@ -53,12 +56,11 @@ UserSchema.statics = {
 		.sort('meta.updateAt')
 		.exec(cb)
 	},
-	findById:function(id,cb){
+	findById:function(id){
 		return this
 		.findOne({
 			_id:id
 		})
-		.exec(cb)
 	},
 	findByName:function(account,cb){
 		return this
@@ -66,7 +68,19 @@ UserSchema.statics = {
 			account:account
 		})
 		.exec(cb)
-	}
+	},
+	getUserInfoById:async function(id){
+		let user = await this.findById(id)
+		let info
+		if(user.role === 0){
+			info = await Person.queryAllByAcountId(id)
+		}else if(user.role === 1){
+			info = await Company.queryAllByAcountId(id)
+		}else{
+			info = await Adminstrator.queryAllByAcountId(id)
+		}
+		return info
+	},
 }
 
 module.exports = UserSchema

@@ -23,7 +23,6 @@ export function RSAEncrypt(encryptString){
  */
 export function dictToString(dict,split='&') {
 	let result = '';
-	// console.log(dict)
 	for (let key in dict) {
 		try {
 			if (result === '') {
@@ -50,3 +49,13 @@ export function dictToJson(dict){
 	}
 	return result;
 }
+
+/**
+ * 空对象
+ */
+export function isEmptyObject(e) {  
+    var t;  
+    for (t in e)  
+        return !1;  
+    return !0  
+} 

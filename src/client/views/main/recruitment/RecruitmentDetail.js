@@ -14,13 +14,13 @@ class RecruitmentDetail extends React.Component {
   handleClick = (e) => {
     e.preventDefault()
     console.log(this.props.id)
-    console.log(this.props.user.id)
+    console.log(this.props.user._id)
     console.log('投递简历')
   }
 
   render() {
   	const {company,job,person,detail,recruitNum,salary,educationRequire,meta} = this.props.info
-  	console.log(company)
+
     return (
 	  <div>
 	    <Card title={`${job.name}(${company.address})`} bordered={false} style={{ width: '100%',height:550 }}>
@@ -34,11 +34,9 @@ class RecruitmentDetail extends React.Component {
 		    <p>工作内容及要求:{detail}</p>
 		    <p>创建时间:{moment(meta.createAt).format('YYYY-MM-DD')}</p>
 		    <img src={company.company.imgPath} alt="" style={{  width: 150,height: 150}} />
-		    <div>
-		        <Button type="default" onClick={()=>{defineHistory.push(`/chat/${company._id}`)}}>发起聊天</Button>
-		    </div>
 		    {
 		    	this.props.user&&this.props.user.role===0 ? (<div>
+		        	<Button type="default" onClick={()=>{defineHistory.push(`/chat/${company.company._id}`)}}>发起聊天</Button>
 		    		<Button type="primary" onClick={this.handleClick}>投个简历</Button>{' '}
 		    	</div>): null
 		    }

@@ -59,3 +59,37 @@ export function isEmptyObject(e) {
         return !1;  
     return !0  
 } 
+
+/**
+ * localStorageService
+ */
+class localStorageService {
+	//获取item
+	getItem = (key) => {
+		let value
+		try{
+			value = JSON.parse(window.localStorage.getItem(key))
+		}catch(err){
+			value = window.localStorage.getItem(key)
+		}
+		return value
+	}
+	//设置item
+	setItem = (key,value) => {
+        if ( typeof value === 'string' ) {
+			window.localStorage.setItem(key,value)
+        } else {
+            window.localStorage.setItem( key, JSON.stringify( value ))
+        }		
+	}
+	//清除某项
+	cleanItem = (key) => {
+		window.localStorage.removeItem(key)
+	}
+
+	//清空所有
+	clearAll = () => {
+		window.localStorage.clear()
+	}
+}
+export const ls = new localStorageService()

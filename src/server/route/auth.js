@@ -12,14 +12,7 @@ const AuthRoute = {
 		let _user = data,isMatch = false,info
 		let {account,password} = _user
 
-		await User.findOne({
-			account
-		},function(err,user){
-			if(err){
-				console.log(user)
-			}
-			_user = user
-		})
+		_user = await User.findOne({account})
 
 		if(!_user){
 			return this.end(500,'user not exist')
@@ -58,9 +51,10 @@ const AuthRoute = {
 		return this.end(200,{user:_user,token:token,info:info})
 	},
 	'DELETE /auth':async function(){
-		let auth = await Auth.findOne({clients:this.socket.id})
-		if(!auth){
-			return this.end(500,'you have not login')
+		//判断用户是否在线
+		if(!mysocket.checkIsOnline(this.socket.user)){
+			console.log('sorry,you have not login!')
+			return this.end(500,'sorry,you have not login!')
 		}
 
 		//用户登出时删除该socket的所有对应关系

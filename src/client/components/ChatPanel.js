@@ -4,6 +4,7 @@ import MessageList from '../components/MessageList'
 import InputBox from '../components/InputBox'
 import message from '../actions/message'
 import socket from '../socket'
+import {ls} from '../util/util'
 
 import './chatPanel.less'
 
@@ -82,10 +83,10 @@ class ChatPanel extends Component {
 
 function mapStateToProps(state){
     if(state.user.user){
-        window.localStorage.setItem('meId',state.user.user._id)
+        ls.setItem('meId',state.user.user._id)
     }
     return {
-        meId:state.user.user && state.user.user._id || window.localStorage.getItem('meId'),
+        meId:state.user.user && state.user.user._id || ls.getItem('meId'),
     }
 }
 

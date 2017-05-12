@@ -5,7 +5,9 @@ import defineHistory from '../../../history'
 import _ from 'underscore'
 import moment from 'moment'
 import { Card,Button } from 'antd'
-   
+import recruitment from '../../../actions/recruitment'
+import {ls} from '../../../util/util'
+
 class RecruitmentDetail extends React.Component {
 	constructor(props){
 		super(props)
@@ -13,14 +15,23 @@ class RecruitmentDetail extends React.Component {
 
   handleClick = (e) => {
     e.preventDefault()
-    console.log(this.props.id)
-    console.log(this.props.user._id)
     console.log('投递简历')
+    recruitment.delivery({
+    	recruitmentId:this.props.id,
+    	userId:this.props.user._id,
+    	companyId:this.props.info.company.company._id,
+    	job:this.props.info.job.name,
+    })
   }
 
   render() {
   	const {company,job,person,detail,recruitNum,salary,educationRequire,meta} = this.props.info
-
+  	const existed = person.some((item) => {
+  		if(item.user === this.props.user._id){
+  			return true
+  		}
+  		return false
+  	})
     return (
 	  <div>
 	    <Card title={`${job.name}(${company.address})`} bordered={false} style={{ width: '100%',height:550 }}>
@@ -37,7 +48,7 @@ class RecruitmentDetail extends React.Component {
 		    {
 		    	this.props.user&&this.props.user.role===0 ? (<div>
 		        	<Button type="default" onClick={()=>{defineHistory.push(`/chat/${company.company._id}`)}}>发起聊天</Button>
-		    		<Button type="primary" onClick={this.handleClick}>投个简历</Button>{' '}
+		    		{ existed ? <Button disabled>已投递</Button> : <Button type="primary" onClick={this.handleClick}>投个简历</Button>}
 		    	</div>): null
 		    }
 	    </Card>
@@ -52,9 +63,13 @@ function mapStateToProps(state,ownProps){
 	let info = _.filter(state.recruitment.infos || [],function(info){
 		return info._id === id
 	})
+	if(state.user.user && info.length !== 0){
+		ls.setItem('user',state.user.user)
+		ls.setItem('rinfo',info)
+	}
 	return {
-		info:info[0],
-		user:state.user.user,
+		info:info.length!==0&&info[0] || ls.getItem('rinfo')[0],
+		user:state.user.user || ls.getItem('user'),
 		id:id
 	}
 }

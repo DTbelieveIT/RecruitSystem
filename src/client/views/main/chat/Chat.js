@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import ChatPanel from '../../../components/ChatPanel';
 import _ from 'underscore'
 import user from '../../../actions/user'
+import {ls} from '../../../util/util'
  
 import './Chat.less'
 
@@ -36,7 +37,7 @@ class Chat extends Component {
 		user
 		.getUserInfo(linkmanId)
 		.then(result => {
-			window.localStorage.setItem('linkman',result.info)
+			ls.setItem('linkman',result.info)
 			this.setState({
 				linkman:result.info
 			})
@@ -45,7 +46,7 @@ class Chat extends Component {
 
 	render() {
 		const {linkmanId} =  this.props
-		const {linkman} = this.state || window.localStorage.getItem('linkman')
+		const {linkman} = this.state || ls.getItem('linkman')
 		return (
 			<ChatPanel linkmanId={linkmanId} linkman={linkman}/>		
 		)

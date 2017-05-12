@@ -6,6 +6,7 @@ import defineHistory from '../history'
 import user from '../actions/user'
 import mymessage from '../actions/message'
 import ui from '../actions/ui'
+import {ls} from '../util/util'
 
 class MDropdown extends React.Component {
     constructor(props){
@@ -18,8 +19,7 @@ class MDropdown extends React.Component {
             .then(response => {
                 if (response.status === 200) {
                     defineHistory.push('/')
-                    window.localStorage.removeItem('token');
-                    window.localStorage.removeItem('userid');
+                    ls.clearAll()
                     ui.openNotification('logout success')
                     user.init()
                     mymessage.init()

@@ -20,4 +20,5 @@ module.exports = function(app){
 
 	//test api
 	app.get('/api/test',User.test)
+	app.get('/api/test1',User.test1)
 }

@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux'
 import {
-	QUERYJOBLIST,RECRUITMENTLIST,  //recruitment
-	GETHISTORYMESSAGE,UPDATEMESSAGE,GETUNREADMESSAGE,GETLINKMANS,MSGINITIALIZE, //message
+	QUERYJOBLIST,RECRUITMENTLIST,UPDATERECRUITMENT,  //recruitment
+	GETHISTORYMESSAGE,UPDATEMESSAGE,GETUNREADMESSAGE,GETLINKMANS,MSGINITIALIZE,UPDATERECRUITMESSAGE, //message
 	LOGINSUCCESS,ONLINE,OFFLINE,INITIALIZE,UPDATEINFO, //user
 	OPENNOTIFICATION,CLOSENOTIFICATION  //ui
 } from '../constants/Const'
@@ -15,6 +15,14 @@ import {
  			return {...state, jobs:action.jobs}
  		case RECRUITMENTLIST:
  			return {...state, infos:action.infos}
+		case UPDATERECRUITMENT:
+			let newInfos = state.infos.map((item) => {
+				if(item._id === action.info._id){
+					return action.info
+				}
+				return item
+			})
+			return {...state,infos:newInfos} 			
 		default:
 			return state;
 	}
@@ -40,7 +48,14 @@ let msgInitialState = {
 		case GETLINKMANS:
 			return {...state,linkmans:action.linkmans} 			
 		case UPDATEMESSAGE:
-			return {...state,msgList:state.msgList.filter((item)=>{return item.from._id !== action.data.linkmanId && item.msgType === action.data.msgType })}
+			return {...state,msgList:state.msgList.filter((item)=>{return !(item.from._id === action.data.linkmanId && item.msgType === action.data.msgType) })}
+		case UPDATERECRUITMESSAGE:
+			return {...state,msgList:state.msgList.filter((item)=>{
+				console.log('2222222j33')
+				console.log(typeof item.recruitment)
+				console.log(action.data.rid)
+				return !(item.from._id === action.data.uid && item.msgType === action.data.msgType && item.recruitment === action.data.rid)
+			})}
  		default:
  			return state
  	}

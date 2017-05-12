@@ -19,6 +19,10 @@ let MessageSchema = new mongoose.Schema({
         type:String,
         enum:['chat','resume'],
     },
+    recruitment:{
+        type: Schema.Types.ObjectId,
+        ref: 'Recruitment',
+    },
     readed:{
         type:Boolean,
         default:false

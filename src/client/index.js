@@ -65,6 +65,18 @@ const RecruitmentDetail = (location,callback) => {
 	},'RecruitmentDetail')
 }
 
+const RecruitmentManage = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/recruitment/RecruitmentManage'))
+	},'RecruitmentManage')
+}
+
+const RecruitmentSetting = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/recruitment/RecruitmentSetting'))
+	},'RecruitmentSetting')
+}
+
 //chat
 const Chat = (location,callback) => {
 	require.ensure([],require => {
@@ -85,6 +97,8 @@ render((
 					<Route path="addRecruitment" getComponent={AddRecruitment}/>
 					<Route path="recruitmentList" getComponent={RecruitmentList}/>
 					<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
+					<Route path="/recruitment/:cid" getComponent={RecruitmentManage}/>
+					<Route path="/recruitment/:uid/:rid" getComponent={RecruitmentSetting}/>
 					<Route path="setting" getComponent={Setting}/>
 					<Route path="/chat/:id" getComponent={Chat} />			
 				</Route>

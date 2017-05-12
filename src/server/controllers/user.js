@@ -2,13 +2,13 @@ import path from 'path'
 import _ from 'underscore'
 import User from '../models/user'
 import Adminstrator from '../models/adminstrator'
-import Recruitment from '../models/recruitment'
 import Person from '../models/person'
 import Company from '../models/company'
 import Job from '../models/job'
 import appConfig from '../../../config/app.config'
 import bcrypt from 'bcrypt-nodejs'
 import mysocket from '../socket'
+import Recruitment from '../models/recruitment'
 
 let {upload} = appConfig
 
@@ -181,6 +181,39 @@ exports.test  = async (req,res) => {
 	// 	await Recruitment.update({_id:id},{$push:{person:uid}})
 	// }
 	// res.send({result:info})
+}
+
+exports.test1 = async (req,res) => {
+	let {uid,rid,status,evaluate} = req.query
+	let info = await Recruitment.fetchById(rid)
+	let target = info.person.find((item) => {
+		return item.user.toString() === uid
+	})
+	//与旧person信息合并
+	target['status'] = status
+	target['evaluate'] = evaluate ? evaluate : ''
+	let newPersons = _.extend(info.person,target)
+	info.person = newPersons
+	
+	await info.save()
 
 
+
+
+	// let existed = info.person.some((item) => {
+	// 	if(item.user.toString() === userId){
+	// 		return true
+	// 	}
+	// 	return false
+	// })
+	// if(existed){
+	// 	console.log('抱歉你已经投递过简历了')
+	// }else{
+	// 	console.log('新投递者')
+	// 	info.person.push({user:userId})
+	// 	info = await info.save()
+	// 	console.log(info)
+	// }
+
+	res.send({status:'修改简历状态成功'})
 }

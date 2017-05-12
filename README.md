@@ -108,3 +108,13 @@ Hello.contextTypes = {
   name: React.PropTypes.string
 };
 ```
+7. ObjectId类型和String类型严格相等为false
+```js
+  let existed = info.person.some((item) => {
+    //需要将ObjectId toString化才能与字符串进行比较
+    if(item.user.toString() === userId){
+      return true
+    }
+    return false
+  })
+```

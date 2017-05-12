@@ -1,6 +1,7 @@
 import store from '../store/ConfigStore'
-import {QUERYJOBLIST,RECRUITMENTLIST} from '../constants/Const'
+import {QUERYJOBLIST,RECRUITMENTLIST,UPDATERECRUITMENT,UPDATERECRUITMESSAGE} from '../constants/Const'
 import api from '../api/apis.js'
+import mysocket from '../socket'
 
 let dispatch = store.dispatch
 
@@ -46,6 +47,36 @@ const actions = {
 			})
 		})
 	},
+	delivery:function(data){
+		return new Promise(resolve => {
+			mysocket.post('/delivery',data,response => {
+				if(response.status === 200){
+					console.log('投递成功后更新state')
+					console.log(response)
+					dispatch({
+						type:UPDATERECRUITMENT,
+						info:response.data,
+					})					
+				}
+				resolve(response)
+			})			
+		})
+	},
+	updateStatus:function(data){
+		return new Promise(resolve => {
+			mysocket.post('/updateStatus',data,response => {
+				if(response.status === 200){
+					console.log('修改招聘状态后更新state')
+					console.log(response)
+					dispatch({
+						type:UPDATERECRUITMESSAGE,
+						data:response.data,
+					})
+				}
+				resolve(response)
+			})
+		})
+	}
 }
 
 

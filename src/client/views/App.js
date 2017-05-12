@@ -8,7 +8,9 @@ import MDropdown from '../components/Dropdown'
 import user from '../actions/user'
 import socket from '../socket'
 import mymessage from '../actions//message'
+import recruitment from '../actions/recruitment'
 import moment from 'moment'
+import {ls} from '../util/util'
 
 import './App.less'
 
@@ -55,7 +57,7 @@ class App extends Component {
 
 	onEnter = (data,type) => {
 		//路由跳转
-		if(type === 'msg'){
+		if(type === 'chat'){
 			this.setState({visible1:false})
 			this.props.router.push(`/chat/${data.from._id}`)
 		}
@@ -63,12 +65,17 @@ class App extends Component {
 			this.setState({visible2:false})
 			this.props.router.push(`/chat/${data._id}`)			
 		}
+		if(type === 'resume'){
+			console.log(data)
+			this.setState({visible1:false})
+			this.props.router.push(`/recruitment/${data.from._id}/${data.recruitment}`)
+		}
 	}
 
 	componentDidMount(){
 		// try auto login
-        const token = window.localStorage.getItem('token');
-        const userid = window.localStorage.getItem('userid');
+        const token = ls.getItem('token');
+        const userid = ls.getItem('userid');
         if (token && token !== '') {
             user
             .reConnect(token)
@@ -76,7 +83,7 @@ class App extends Component {
                 if (result.status === 200) {
                     user.online()
                     //获取未读消息
-                    mymessage.getUnreadMessage({userid}).then()   
+                    mymessage.getUnreadMessage({userid})  
 
                     //获取所有联系人信息
                     mymessage.getLinkmans({userid}) 
@@ -117,13 +124,21 @@ class App extends Component {
         })        
 
         socket.on('new message',data=>{
-        	console.log('收到一条新消息')
+        	console.log('收到一条新的消息')
             //获取未读消息
             mymessage.getUnreadMessage({userid})   
 
             //获取所有联系人信息
             mymessage.getLinkmans({userid}) 	           	
+
+            //获取所有的招聘信息
+            recruitment.queryRecruitmentList()
         })
+
+        // socket.on('new resume message',data=>{
+        // 	console.log('收到一条新的面试消息')
+        // 	console.log(data)
+        // })
 	}
 
     render() {	
@@ -133,7 +148,7 @@ class App extends Component {
     	let ChatContent = <ul>
     		{ChatMsg.map((msg,key) => 
     			<li key={key} onClick={this.hide} >
-					<a onClick={()=>this.onEnter(msg,'msg')} >
+					<a onClick={()=>this.onEnter(msg,'chat')} >
 						<h3>{msg.from.account}</h3>
 						<p>{msg.content}</p>
               			<span className="time">{moment(msg.meta.createAt).format('YYYY-MM-DD HH:mm:ss')}</span>				
@@ -146,7 +161,7 @@ class App extends Component {
     	let ResumeContent = <ul>
     		{ResumeMsg.map((msg,key) => 
     			<li key={key} onClick={this.hide}>
-					<a onClick={()=>this.onEnter(msg,'msg')} >
+					<a onClick={()=>this.onEnter(msg,'resume')} >
 						<h3>{msg.from.account}</h3>
 						<p>{msg.content}</p>
               			<span className="time">{moment(msg.meta.createAt).format('YYYY-MM-DD HH:mm:ss')}</span>				
@@ -211,7 +226,7 @@ class App extends Component {
 	                        	</Link>
 					        </Menu.Item>
 					        <Menu.Item key="recruitment">
-	 							<Link to="/">
+	 							<Link to={'/recruitment/' + this.props.info._id}>
 					        		<Icon type="contacts" />
 	                            	<span className="nav-text">招聘管理</span>
 	                        	</Link>
@@ -290,6 +305,7 @@ function mapStateToProps(state) {
     return {
     	online:state.user.online,
     	user:state.user.user,
+    	info:state.user.info || {},
     	linkmans:state.message.linkmans || [],
     	msgList:state.message.msgList || [],
     }

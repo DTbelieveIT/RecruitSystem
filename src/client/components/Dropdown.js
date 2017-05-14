@@ -8,6 +8,8 @@ import mymessage from '../actions/message'
 import ui from '../actions/ui'
 import {ls} from '../util/util'
 
+import './Dropdown.less'
+
 class MDropdown extends React.Component {
     constructor(props){
       super(props)
@@ -40,7 +42,7 @@ class MDropdown extends React.Component {
         )
 
         return (
-            <div>
+            <div className="Dropdown">
               <Dropdown overlay={menu}>
                 <a className="ant-dropdown-link" href="#">
                 {this.props.role === 0 ? '普通用户':(this.props.role === 1 ?'企业用户':'管理员')}{'  :  '}{this.props.account} <Icon type="caret-down" />

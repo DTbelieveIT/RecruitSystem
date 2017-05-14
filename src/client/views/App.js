@@ -213,25 +213,31 @@ class App extends Component {
 					        		<Icon type="home" />
 	                            	<span className="nav-text">招聘信息列表</span>
 	                        	</Link>
-					        </Menu.Item>				            
-					        <Menu.Item key="resume">
-	 							<Link to={"/delivery/"+this.props.user._id}>
-					        		<Icon type="user" />
-	                            	<span className="nav-text">投递箱</span>
-	                        	</Link>
-					        </Menu.Item>
-					        <Menu.Item key="recruitment">
-	 							<Link to={'/recruitment/' + this.props.info._id}>
-					        		<Icon type="contacts" />
-	                            	<span className="nav-text">招聘管理</span>
-	                        	</Link>
-					        </Menu.Item>
+					        </Menu.Item>	
+					        {this.props.user.role === 0 ? 
+						        <Menu.Item key="resume">
+		 							<Link to={"/delivery/"+this.props.user._id}>
+						        		<Icon type="user" />
+		                            	<span className="nav-text">投递箱</span>
+		                        	</Link>
+						        </Menu.Item>
+					        : null}	
+					        {this.props.user.role === 1 ? 	            
 					        <Menu.Item key="addRecruitment">
 	 							<Link to="/main/addRecruitment">
 					        		<Icon type="usergroup-add" />
 	                            	<span className="nav-text">添加招聘信息</span>
 	                        	</Link>
 					        </Menu.Item>
+					        : null}
+					        {this.props.user.role === 1 ? 
+						        <Menu.Item key="recruitment">
+		 							<Link to={'/recruitment/' + this.props.info._id}>
+						        		<Icon type="contacts" />
+		                            	<span className="nav-text">招聘管理</span>
+		                        	</Link>
+						        </Menu.Item>
+					        : null}	
 			          </Menu>
 			        </Sider>				
 					<Notification />
@@ -241,7 +247,8 @@ class App extends Component {
 					            theme="dark"
 					            mode="horizontal"
 					            style={{
-					                lineHeight: '64px'
+					                lineHeight: '64px',
+					                position:'relative',
 					            }}
 					            >
 					        <Menu.Item key="trigger">
@@ -267,13 +274,13 @@ class App extends Component {
   							 </Popover>
 					        </Menu.Item>					        				        				            
 					        {this.props.online ? null : 
-					        <Menu.Item key="login">
+					        <Menu.Item key="login" style={{position:'absolute',right:90}}>
 	 							<Link to="login">
 	                            	<span className="nav-text">登录</span>
 	                        	</Link>
 					        </Menu.Item>}
 					        {this.props.online ? null :
-					        <Menu.Item key="logon">
+					        <Menu.Item key="logon" style={{position:'absolute',right:20}}>
 	 							<Link to="logon">
 	                            	<span className="nav-text">注册</span>
 	                        	</Link>

@@ -5,6 +5,8 @@ import defineHistory from '../../../history'
 import RecruitmentItem from '../../../components/RecruitmentItem';
 import recruitment from '../../../actions/recruitment'
 
+import './RecruitmentList.less'
+
 class RecruitmentList extends React.Component {
 	constructor(props){
 		super(props)
@@ -15,12 +17,13 @@ class RecruitmentList extends React.Component {
   }
 
   get recruitmentList() {
-    return this.props.infos.map(info => <Col span="8" style={{padding:'10px'}}><RecruitmentItem info={info} key={info._id} /></Col>)
+    let online = (Object.keys(this.props.user).length !== 0)
+    return this.props.infos.map(info => <Col span="8" style={{padding:'10px'}}><RecruitmentItem info={info} key={info._id} online={online} /></Col>)
   }
 
   render() {
     return (
-      <div style={{padding: '30px' }}>
+      <div className="RecruitmentList">
         <Row>
         { this.recruitmentList }
         </Row>
@@ -32,7 +35,8 @@ class RecruitmentList extends React.Component {
 
 function mapStateToProps(state){
 	return {
-    infos:state.recruitment.infos || [], 
+    infos:state.recruitment.infos || [],
+    user:state.user.user || {},
 	}
 }
 

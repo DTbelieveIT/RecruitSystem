@@ -1,9 +1,13 @@
 import React,{ Component } from 'react'
 import {connect} from 'react-redux'
 import defineHistory from '../../../history'
-import {Tooltip} from 'antd'
+import {Popover,Button} from 'antd'
+import {ls} from '../../../util/util'
 
 import './RecruitmentManage.less'
+
+let mapStatus = ['待处理','拒绝','邀请面试','面试失败','面试成功']
+let mapColor = ['yellow','red','blue','red','green']
 
 class RecruitmentManage extends Component{
   constructor(props){
@@ -17,34 +21,40 @@ class RecruitmentManage extends Component{
   render(){
     let {infos} = this.props
     let data = infos.map((info) => {
-      let text
+      let content
       if(info.person.length > 0){
-        text = <ul>
-            {info.person.map((item) => 
-              <li>
-                <a onClick={()=>this.onEnter(item.user._id,info._id)} >
-                  {item.user.account}
-                  <span>状态{item.status}</span>
-                </a>
-              </li>)
-            }
-        </ul>
+        content = <div className="rm_content">
+            <ul>
+                {info.person.map((item) => 
+                  <li >
+                    <a onClick={()=>this.onEnter(item.user._id,info._id)} >
+                      {item.user.account}
+                    </a>
+                    <span className={`status ${mapColor[item.status]}`}>{mapStatus[item.status]}</span>
+                  </li>)
+                }
+            </ul>
+        </div>
       }else{
-        text = ''
+        content = ''
       }
 
       return (
         <li>
-          <Tooltip placement="rightTop" title={text}>
-            <a href="#">{`${info.job.name}(${info.person.length})人`}</a>
-          </Tooltip>
+        <Popover placement="rightTop" content={content} >
+          <Button>
+            {`${info.job.name}(`}<span style={{color:'red'}}>{info.person.length}</span>)人
+          </Button>
+        </Popover>        
         </li>
       )
     })
     return (
-      <div>
-        <h1>我是招聘信息管理页</h1>
-        <ul>{data}</ul>
+      <div className="RecruitmentManage">
+        <h1>贵公司有{infos.length}个招聘岗位</h1>
+        <div className="wrap">
+          <ul className="data">{data}</ul>
+        </div>
       </div>
     )
   }
@@ -53,9 +63,17 @@ class RecruitmentManage extends Component{
 
 function mapStateToProps(state,ownProps){
   let {cid} = ownProps.params
+  if(Object.keys(state.recruitment).length !== 0){
+    ls.setItem('recruitment',state.recruitment)
+  }
+  state.recruitment = ls.getItem('recruitment')
+  console.log(state.recruitment)
+
   let infos = state.recruitment.infos.filter((info) => {
     return info.company._id === cid
   })
+
+
 
   return {
     cid:cid,

@@ -2,6 +2,9 @@ import React,{ Component } from 'react'
 import {connect} from 'react-redux'
 import {contains} from '../../../util/util'
 import message from '../../../actions/message'
+import {ls} from '../../../util/util'
+
+import './DeliveryDetail.less'
 
 let mapStatus = ['你的简历处于待处理之中...','抱歉,你被拒绝了!','恭喜你进入面试阶段,请好好准备!','抱歉,面试失败了!','恭喜啦,面试成功!']
 
@@ -17,10 +20,18 @@ class DeliveryDetail extends Component{
 
   render(){
     return (
-      <div>
+      <div className="DeliveryDetail">
         <h1>{this.props.info.company.name}的{this.props.info.job.name}岗位招聘状态如下:</h1>
-        <span>{mapStatus[this.props.target['status']]}</span>
-        { contains([1,3,4],this.props.target['status']) ? <span>企业对你的评价:{this.props.target['evaluate']}</span> : null}
+        <div className="result">
+            <label>结果   :</label>
+            <span>{mapStatus[this.props.target['status']]}</span>
+        </div>
+        { contains([1,3,4],this.props.target['status']) ? 
+          <div className="evaluate">
+              <label>{this.props.info.company.name}对你的评价   :</label>        
+              <span>{this.props.target['evaluate']}</span> 
+          </div>
+        : null}
       </div>
     )
   }
@@ -29,6 +40,10 @@ class DeliveryDetail extends Component{
 
 function mapStateToProps(state,ownProps){
   let {uid,rid} = ownProps.params
+  if(Object.keys(state.recruitment).length !== 0){
+    ls.setItem('recruitment',state.recruitment)
+  }
+  state.recruitment = ls.getItem('recruitment')
   let info = state.recruitment.infos.find((item) => {
     return item._id.toString() === rid
   })

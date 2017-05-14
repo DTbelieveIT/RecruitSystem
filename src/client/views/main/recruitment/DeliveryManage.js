@@ -1,8 +1,12 @@
 import React,{ Component } from 'react'
 import {connect} from 'react-redux'
 import {Tooltip} from 'antd'
+import {ls} from '../../../util/util'
+
+import './DeliveryManage.less'
 
 let mapStatus = ['待处理','拒绝','邀请面试','面试失败','面试成功']
+let mapColor = ['yellow','red','blue','red','green']
 
 class DeliveryManage extends Component{
   onEnter = (uid,rid) => {
@@ -18,16 +22,16 @@ class DeliveryManage extends Component{
       return (
         <li>
             <a onClick={()=>this.onEnter(uid,info._id)} >
-              <span className="company">{info.company.name}</span>
-              <span className="job">{info.job.name}</span>
-              <span className="status">{mapStatus[target['status']]}</span>
+              <span className="company">{info.company.name}</span>{'  '}
+              <span className="job">{info.job.name}</span>{'  '}
+              <span className={`status ${mapColor[target['status']]}`}>{mapStatus[target['status']]}</span>
             </a>
         </li>
       )
     })
     return (
-      <div>
-        <h1>我是投递箱管理页</h1>
+      <div className="DeliveryManage">
+        <h1>亲爱的用户,你投递的岗位情况如下:</h1>
         <ul>{data}</ul>
       </div>
     )
@@ -38,6 +42,10 @@ class DeliveryManage extends Component{
 function mapStateToProps(state,ownProps){
   let {uid} = ownProps.params
   let existed
+  if(Object.keys(state.recruitment).length !== 0){
+    ls.setItem('recruitment',state.recruitment)
+  }
+  state.recruitment = ls.getItem('recruitment')  
   let infos = state.recruitment.infos.filter((info) => {
     existed = info.person.some((item) => {
       if(item.user._id.toString() === uid){

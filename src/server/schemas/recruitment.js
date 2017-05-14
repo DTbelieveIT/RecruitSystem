@@ -38,7 +38,7 @@ RecruitmentSchema.statics = {
 				}
 			})
 			.populate('job')
-			.populate('person user')
+			.populate('person.user')
 			.exec((err,info) => {
 				resolve(info)
 			})
@@ -55,7 +55,7 @@ RecruitmentSchema.statics = {
 				}
 			})
 			.populate('job')
-			.populate('person user')
+			.populate('person.user')
 			.exec((err,info) => {
 				resolve(info)
 			})
@@ -65,7 +65,7 @@ RecruitmentSchema.statics = {
 		return this
 		.findOne({name:name})
 		.exec(cb);
-	}
+	},
 };
 
 module.exports = RecruitmentSchema

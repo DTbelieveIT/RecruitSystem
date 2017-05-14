@@ -93,3 +93,16 @@ class localStorageService {
 	}
 }
 export const ls = new localStorageService()
+
+/**
+*  判断数组是否存在否元素
+*/
+export function contains(arr, obj) {  
+    var i = arr.length;  
+    while (i--) {  
+        if (arr[i] === obj) {  
+            return true;  
+        }  
+    }  
+    return false;  
+}  

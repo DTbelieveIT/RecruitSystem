@@ -1,5 +1,5 @@
 import store from '../store/ConfigStore'
-import {GETUNREADMESSAGE,GETLINKMANS,MSGINITIALIZE,UPDATEMESSAGE} from '../constants/Const'
+import {GETUNREADMESSAGE,GETLINKMANS,MSGINITIALIZE,UPDATEMESSAGE,UPDATERECRUITMESSAGE} from '../constants/Const'
 import api from '../api/apis'
 import socket from '../socket'
 
@@ -60,6 +60,19 @@ const actions = {
 					}
 				}
 				resolve(response)
+			})
+		})
+	},
+	updateRecruitMessage:function(data){
+		return new Promise(resolve => {
+			socket.post('/updateRecruitMessage',data,response => {
+				if(response.status === 200){
+					console.log('更新面试信息为已读')
+					dispatch({
+						type:'UPDATERECRUITMESSAGE',
+						data:response.data.message
+					})
+				}
 			})
 		})
 	},

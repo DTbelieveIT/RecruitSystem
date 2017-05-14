@@ -37,10 +37,12 @@ class ChatPanel extends Component {
 
         //socket监听new message事件
         socket.on('new message',data => {
-            let tmp = this.state.messages
-            this.setState({
-                messages:[...tmp,data]
-            })
+            if(data.msgType === 'chat'){
+                let tmp = this.state.messages
+                this.setState({
+                    messages:[...tmp,data]
+                })
+            }
         })
     }
 

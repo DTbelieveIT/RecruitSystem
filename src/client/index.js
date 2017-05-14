@@ -77,6 +77,18 @@ const RecruitmentSetting = (location,callback) => {
 	},'RecruitmentSetting')
 }
 
+const DeliveryManage = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/recruitment/DeliveryManage'))
+	},'DeliveryManage')	
+}
+
+const DeliveryDetail = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/recruitment/DeliveryDetail'))
+	},'DeliveryDetail')	
+}
+
 //chat
 const Chat = (location,callback) => {
 	require.ensure([],require => {
@@ -99,6 +111,8 @@ render((
 					<Route path="/detail/:id" getComponent={RecruitmentDetail}/>
 					<Route path="/recruitment/:cid" getComponent={RecruitmentManage}/>
 					<Route path="/recruitment/:uid/:rid" getComponent={RecruitmentSetting}/>
+					<Route path="/delivery/:uid" getComponent={DeliveryManage}/>
+					<Route path="/delivery/:uid/:rid" getComponent={DeliveryDetail}/>
 					<Route path="setting" getComponent={Setting}/>
 					<Route path="/chat/:id" getComponent={Chat} />			
 				</Route>

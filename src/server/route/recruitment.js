@@ -10,7 +10,7 @@ const RecruitmentRoute = {
 		let {recruitmentId,userId,companyId,job} = data
 		let info = await Recruitment.fetchById(recruitmentId)
 		let existed = info.person.some((item) => {
-			if(item.user.toString() === userId){
+			if(item.user._id.toString() === userId){
 				return true
 			}
 			return false
@@ -21,8 +21,8 @@ const RecruitmentRoute = {
 		}else{
 			console.log('新投递者')
 			info.person.push({user:userId})
-			info = await info.save()
-
+			await info.save()
+			info = await Recruitment.fetchById(recruitmentId)
 			//转发到消息盒子的内容，先保存到消息数据库
 			let newMessage = new Message({
 				from:userId,
@@ -50,7 +50,6 @@ const RecruitmentRoute = {
 	},	
 	'POST /updateStatus':async function(data){
 		let {uid,rid,cid,status,evaluate} = data
-		console.log(data)
 		if(status === 0){
 			return this.end(500,'you must be handle it!')
 		}
@@ -58,7 +57,7 @@ const RecruitmentRoute = {
 
 		let info = await Recruitment.fetchById(rid)
 		let target = info.person.find((item) => {
-			return item.user.toString() === uid
+			return item.user._id.toString() === uid
 		})
 		//与旧person信息合并
 		target['status'] = status
@@ -66,7 +65,7 @@ const RecruitmentRoute = {
 		let newPersons = _.extend(info.person,target)
 		info.person = newPersons
 		//保存到数据库
-		await info.save()
+		let newInfo = await info.save()
 
 		let content
 		if(status === 1){
@@ -82,7 +81,6 @@ const RecruitmentRoute = {
 		//更新旧消息为已读
 		let result = await Message.update({to:cid,from:uid,msgType:'resume',recruitment:rid,readed:false},{$set:{readed:true}})
 		console.log('更新用户发给我的面试消息')		
-		console.log(result)
 
 		//转发到消息盒子的内容，先保存到消息数据库
 		let newMessage = new Message({
@@ -94,7 +92,6 @@ const RecruitmentRoute = {
 		})	
 		let message = await newMessage.save()	
 		message = await Message.findOne({_id:message._id}).populate('from','account imgPath')
-		console.log(message)
 		if(mysocket.checkIsOnline(uid)){
 			console.log('用户在线')
 			mysocket.getSocket(uid).emit('new message',{
@@ -103,12 +100,13 @@ const RecruitmentRoute = {
 				account:message.from.account,
 				content:message.content,
 				createAt:moment(message.meta.createAt).format('YYYY-MM-DD HH:mm:ss'),
+				msgType:'resume',
 			})
 		}else{
 			console.log('用户不在线')
 		}
 
-		this.end(200,{uid:uid,msgType:'resume',rid:rid})
+		this.end(200,{message:{uid:uid,msgType:'resume',rid:rid},newInfo:newInfo})
 	}
 }
 

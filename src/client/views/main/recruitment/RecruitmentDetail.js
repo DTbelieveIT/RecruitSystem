@@ -27,7 +27,7 @@ class RecruitmentDetail extends React.Component {
   render() {
   	const {company,job,person,detail,recruitNum,salary,educationRequire,meta} = this.props.info
   	const existed = person.some((item) => {
-  		if(item.user === this.props.user._id){
+  		if(item.user._id.toString() === this.props.user._id){
   			return true
   		}
   		return false

@@ -1,6 +1,7 @@
 import store from '../store/ConfigStore'
-import {QUERYJOBLIST,RECRUITMENTLIST,UPDATERECRUITMENT,UPDATERECRUITMESSAGE} from '../constants/Const'
+import {QUERYJOBLIST,RECRUITMENTLIST,UPDATERECRUITMENT,UPDATESTATUSMESSAGE,UPDATERECRUITMENTSTATUS} from '../constants/Const'
 import api from '../api/apis.js'
+import ui from './ui'
 import mysocket from '../socket'
 
 let dispatch = store.dispatch
@@ -52,7 +53,6 @@ const actions = {
 			mysocket.post('/delivery',data,response => {
 				if(response.status === 200){
 					console.log('投递成功后更新state')
-					console.log(response)
 					dispatch({
 						type:UPDATERECRUITMENT,
 						info:response.data,
@@ -66,11 +66,14 @@ const actions = {
 		return new Promise(resolve => {
 			mysocket.post('/updateStatus',data,response => {
 				if(response.status === 200){
-					console.log('修改招聘状态后更新state')
-					console.log(response)
+					ui.openNotification('updateStatus success')
 					dispatch({
-						type:UPDATERECRUITMESSAGE,
-						data:response.data,
+						type:UPDATESTATUSMESSAGE,
+						data:response.data.message,
+					})
+					dispatch({
+						type:UPDATERECRUITMENTSTATUS,
+						info:response.data.newInfo,
 					})
 				}
 				resolve(response)

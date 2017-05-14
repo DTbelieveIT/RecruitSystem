@@ -37,7 +37,7 @@ class App extends Component {
 	}
 
 	handleChange = (key) => {
-		// console.log(key)
+
 	}
 
 	toggle = () => {
@@ -68,7 +68,7 @@ class App extends Component {
 		if(type === 'resume'){
 			console.log(data)
 			this.setState({visible1:false})
-			this.props.router.push(`/recruitment/${data.from._id}/${data.recruitment}`)
+			this.props.router.push(this.props.user.role === 0 ? `/delivery/${this.props.user._id}/${data.recruitment}` : `/recruitment/${data.from._id}/${data.recruitment}`)
 		}
 	}
 
@@ -134,11 +134,6 @@ class App extends Component {
             //获取所有的招聘信息
             recruitment.queryRecruitmentList()
         })
-
-        // socket.on('new resume message',data=>{
-        // 	console.log('收到一条新的面试消息')
-        // 	console.log(data)
-        // })
 	}
 
     render() {	
@@ -220,9 +215,9 @@ class App extends Component {
 	                        	</Link>
 					        </Menu.Item>				            
 					        <Menu.Item key="resume">
-	 							<Link to="/">
+	 							<Link to={"/delivery/"+this.props.user._id}>
 					        		<Icon type="user" />
-	                            	<span className="nav-text">简历管理</span>
+	                            	<span className="nav-text">投递箱</span>
 	                        	</Link>
 					        </Menu.Item>
 					        <Menu.Item key="recruitment">
@@ -304,7 +299,7 @@ class App extends Component {
 function mapStateToProps(state) {
     return {
     	online:state.user.online,
-    	user:state.user.user,
+    	user:state.user.user || {},
     	info:state.user.info || {},
     	linkmans:state.message.linkmans || [],
     	msgList:state.message.msgList || [],

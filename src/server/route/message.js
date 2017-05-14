@@ -24,7 +24,7 @@ const MessageRoute = {
 		message = await Message.findOne({_id:message._id}).populate('from','account imgPath')
 		if(mysocket.checkIsOnline(linkmanId)){
 			console.log(error('用户在线'))
-			mysocket.getSocket(linkmanId).emit('new message',{from:message.from._id,imgPath:message.from.imgPath,account:message.from.account,content:message.content,createAt:moment(message.meta.createAt).format('YYYY-MM-DD HH:mm:ss')})
+			mysocket.getSocket(linkmanId).emit('new message',{from:message.from._id,imgPath:message.from.imgPath,account:message.from.account,content:message.content,createAt:moment(message.meta.createAt).format('YYYY-MM-DD HH:mm:ss'),msgType:'chat'})
 		}else{
 			console.log(notice('用户不在线'))
 		}
@@ -46,7 +46,7 @@ const MessageRoute = {
 	},
 	'GET /getUnreadMessage':async function(data){
 		let {userid} = data
-		let unread = await Message.find({to:userid,readed:false}).populate('from','account')
+		let unread = await Message.find({to:userid,readed:false}).populate('from','account').populate('to','account')
 		this.end(200,unread)
 	},
 	'GET /getLinkmans':async function(data){
@@ -58,6 +58,14 @@ const MessageRoute = {
 		linkmans = await User.find({_id: linkmans},'-password')
 		this.end(200,linkmans)
 	},	
+	'POST /updateRecruitMessage':async function(data){
+		let {uid,rid} = data
+		let result = await Message.update({to:uid,recruitment:rid,msgType:'resume'},{$set:{readed:true}},{multi:true})
+		console.log(result)
+		console.log('更新后的招聘状态信息')
+		
+		this.end(200,{message:{uid:uid,msgType:'resume',rid:rid}})
+	}
 }
 
 module.exports = MessageRoute;

@@ -77,23 +77,6 @@ io.on('connection', function (socket) {
 
 });
 
-//Chat
-// var message = require('./controllers/message')
-// io.on('connection', function (socket) {
-// 	console.log('socket已连接')
-
-// 	socket.on('new message', function (data) {
-// 		let newMessage
-// 		message.saveMessage(data.meId,data.linkmanId,data.content).then((newMessage) => {
-// 			socket.broadcast.emit('new message',newMessage)
-// 		})
-// 	});
-
-// 	socket.on('disconnect',function(){
-// 		console.log('socket已断开')
-// 	})
-
-// });
 
 /**
  * express middleware

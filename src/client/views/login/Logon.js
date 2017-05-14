@@ -29,7 +29,6 @@ class Logon extends React.Component {
                 user
                     .logon(values)
                     .then(data => {
-                        console.log(data)
                     	if(data.status === 200){
                     		defineHistory.push('/login')
                             ui.openNotification('logon success!')

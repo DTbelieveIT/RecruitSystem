@@ -5,6 +5,7 @@ import defineHistory from '../../../history'
 import user from '../../../actions/user'
 import recruitment from '../../../actions/recruitment'
 import appConfig from '../../../../../config/app.config'
+import {contains} from '../../../util/util'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
@@ -82,6 +83,7 @@ class RecruitmentManage extends Component{
       },
     }
     const {user} = this.state
+    contains([1,3,4],this.state.status)
     const {rid,uid,cid,status} = this.props
 
     //已经上传的简历和作品
@@ -163,7 +165,19 @@ class RecruitmentManage extends Component{
 	              <Radio value={4}>面试成功</Radio>
             </RadioGroup>
             )}
-        </FormItem>          
+        </FormItem>   
+        {contains([1,3,4],this.state.status) ? 
+            <FormItem
+              {...formItemLayout}
+              label="对面试者评价"
+            >
+              {getFieldDecorator('evaluate', {
+                rules: [{ required: true, message: 'Please input evaluate!' }],
+              })(
+                <Input type="textarea" rows={4} />
+              )}
+            </FormItem>            
+        : null}      
           <FormItem {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit" size="large">确定</Button>{'  '}
             <Button type="default" size="large" onClick={this.handleBack}>返回</Button>
@@ -182,7 +196,7 @@ function mapStateToProps(state,ownProps){
 		return item._id === rid
 	})
 	targetPerson = targetInfo.person.find((item) => {
-		return item.user === uid
+		return item.user._id === uid
 	})
 
 	return {

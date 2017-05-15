@@ -29,7 +29,7 @@ class Login extends Component {
                             window.localStorage.setItem('token',result.data.token)
                             window.localStorage.setItem('userid',result.data.user._id)
                             ui.openNotification('login success')
-                            defineHistory.push('/')
+                            defineHistory.push('/main/recruitmentList')
                             user.online()
                             //获取未读消息
                             mymessage
@@ -93,7 +93,6 @@ class Login extends Component {
                     登录
                   </Button>
                   <Link to="/logon">立即注册</Link>
-                  <a className="login-form-forgot" href="">忘记密码</a>
                 </FormItem>
               </Form>
          </div>

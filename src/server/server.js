@@ -11,7 +11,8 @@ var {warn,error,notice} = util
 // var session = require('express-session');
 // var redis = require('redis')
 // var RedisStore = require('connect-redis')(session);
-var appConfig = require('../../config/app.config.js')
+var appConfig = require('../../config/app.config')
+var init = require('../../config/init')
 var mysocket = require('./socket')
 
 //connect MongoDB
@@ -19,6 +20,16 @@ mongoose.connect(appConfig.mongodb.database)
 mongoose.connection.on('error',() => {
 	console.info('Error:Could not connect to MongoDB')
 })
+mongoose.connection.on('connected',() => {
+	//init root account
+	init.initRoot().then(result=>{
+		if(result === 'OK'){
+			console.log('init root account success!')
+		}
+	})
+});    
+
+
 
 //create redis client
 // var redisClient = redis.createClient(appConfig.redis.port,appConfig.host)

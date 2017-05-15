@@ -1,4 +1,11 @@
 module.exports = {
+	rootAccount:{
+		account:'root',
+		password:'root',
+		role:2,
+		phone:'12345678910',
+		name:'DTBelieveIT',
+	},
 	server:'localhost',
 	serverDev:'localhost',
 	host:'127.0.0.1',

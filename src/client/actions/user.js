@@ -1,6 +1,6 @@
 import store from '../store/ConfigStore'
 import socket from '../socket'
-import {LOGINSUCCESS,LOGONSUCCESS,UPDATEINFO,ONLINE,OFFLINE,INITIALIZE} from '../constants/Const'
+import {LOGINSUCCESS,LOGONSUCCESS,UPDATEINFO,ONLINE,OFFLINE,INITIALIZE,DELUSERINFO} from '../constants/Const'
 import api from '../api/apis.js'
 
 
@@ -116,6 +116,24 @@ const actions = {
 				path:'/getUserInfo',
 				query:{userid}
 			}).then(response => {
+				resolve(response)
+			})
+		})
+	},
+	delUserInfo:function(userinfo){
+		return new Promise(resolve => {
+			api({
+				method:'DELETE',
+				path:'/delUserInfo',
+				query:{...userinfo}
+			}).then(response => {
+				if(response.status === 200){
+					dispatch({
+						type:DELUSERINFO,
+						role:response.role,
+						id:response.id,
+					})	
+				}
 				resolve(response)
 			})
 		})

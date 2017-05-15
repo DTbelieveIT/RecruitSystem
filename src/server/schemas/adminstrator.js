@@ -19,11 +19,16 @@ let AdminstratorSchema = new mongoose.Schema({
 })
 
 AdminstratorSchema.statics = {
-	fetch:function(cb){
-		return this
-		.find({})
-		.sort('meta.updateAt')
-		.exec(cb)
+	fetch:function(){
+		return new Promise((resolve,reject) => {
+			this
+			.find({})
+			.sort('meta.updateAt')
+			.populate('adminstrator','-password')
+			.exec((err,info) => {
+				resolve(info)
+			})
+		})
 	},
 	findById:function(id,cb){
 		return this

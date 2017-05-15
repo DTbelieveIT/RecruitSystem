@@ -1,44 +1,27 @@
-import React,{ Component , PropTypes} from 'react'
-import { Form, Input, Tooltip, Radio,Icon, Cascader, Select, Row, Col, Checkbox, Button} from 'antd'
-import moment from 'moment'
+import React,{ Component } from 'react'
 import {connect} from 'react-redux'
-import defineHistory from '../../../history'
+import { Form, Input, Tooltip, Radio,Icon, Cascader, Select, Row, Col, Checkbox, Button} from 'antd'
 import AvatarImg from '../../../components/AvatarImg'
 import AvatarFile from '../../../components/AvatarFile'
 import appConfig from '../../../../../config/app.config.js'
-import user from '../../../actions/user'
+import moment from 'moment'
+import defineHistory from '../../../history'
+import admin from '../../../actions/admin'
 import ui from '../../../actions/ui'
 
-import './Setting.less'
+import './UserSetting.less'
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group;
 const uploadUrlLen = appConfig.upload.file.uploadUrl.length
 
-class UpdateInfoForm extends React.Component {
-	constructor(props){
-		super(props)
-	  	this.state = {
-	    	confirmDirty: false,
-	    	changePassword:false,
-	  	};
-	}
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-        user
-        .updateInfo(values)
-        .then(result => {
-          if(result.status === 200){
-              defineHistory.push('/main')
-              ui.openNotification('updateInfo success')
-          }
-        })
-      }
-    });
+class UserSetting extends Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      confirmDirty: false,
+      changePassword:false,
+    };    
   }
 
   normFile = (e) => {
@@ -57,8 +40,25 @@ class UpdateInfoForm extends React.Component {
     return e && e.fileList;
   }
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        admin
+        .updateUserInfo(values)
+        .then(result => {
+          if(result.status === 200){
+            defineHistory.goBack()
+            ui.openNotification('updateInfo success')
+          }
+        })
+      }
+    });
+  }
+
   changePassword = () => {
-  	this.state.changePassword = !this.state.changePassword
+    this.state.changePassword = !this.state.changePassword
   }
 
   handleConfirmBlur = (e) => {
@@ -81,9 +81,17 @@ class UpdateInfoForm extends React.Component {
     callback();
   }
 
-  render() {
+  render(){
     const { getFieldDecorator } = this.props.form;
-    const imageUrl = this.state.imageUrl;
+    let {info,role} = this.props
+
+    //已经上传的简历和作品
+    const resume = info && info.resume && info.resume.path && info.resume.path.map(function(path){
+      return (
+        <li><a href={path} target="_blank" >{path.substring(uploadUrlLen+1)}</a></li>
+      )
+    })
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -107,16 +115,9 @@ class UpdateInfoForm extends React.Component {
       },
     };
 
-    //已经上传的简历和作品
-    const resume = this.props.info && this.props.info.resume && this.props.info.resume.path && this.props.info.resume.path.map(function(path){
-      return (
-        <li><a href={path} target="_blank" >{path.substring(uploadUrlLen+1)}</a></li>
-      )
-    })
-
     return (
-      <div className="Setting">
-      {this.props.role === 0 ? 
+      <div className="UserSetting">
+        {role === 0 ? 
         <Form onSubmit={this.handleSubmit}>
           <h1>普通用户信息设置页</h1>
           <FormItem
@@ -124,7 +125,7 @@ class UpdateInfoForm extends React.Component {
             label="账号"
           >
             {getFieldDecorator('account', {
-              initialValue:this.props.user.account
+              initialValue:info.person.account
             })(
               <Input disabled/>
             )}
@@ -179,7 +180,7 @@ class UpdateInfoForm extends React.Component {
             )}
           >
             {getFieldDecorator('resume["name"]', {
-              initialValue:this.props.info.resume.name,
+              initialValue:info.resume.name,
               rules: [{ whitespace: true }],
             })(
               <Input />
@@ -190,7 +191,7 @@ class UpdateInfoForm extends React.Component {
             label="手机号码"
           >
             {getFieldDecorator('resume["phone"]', {
-              initialValue:this.props.info.resume.phone,
+              initialValue:info.resume.phone,
               rules: [{ required: true, message: 'Please input your phone number!' }],
             })(
               <Input />
@@ -201,7 +202,7 @@ class UpdateInfoForm extends React.Component {
             label="邮箱"
           >
             {getFieldDecorator('resume["email"]', {
-              initialValue:this.props.info.resume.email,
+              initialValue:info.resume.email,
               rules: [{
                 type: 'email', message: 'The input is not valid E-mail!',
               }, {
@@ -216,7 +217,7 @@ class UpdateInfoForm extends React.Component {
             label="心仪工作"
           >
             {getFieldDecorator('resume["job"]["name"]', {
-              initialValue:this.props.info.resume.job.name
+              initialValue:info.resume.job.name
             })(
               <Input/>
             )}
@@ -229,7 +230,7 @@ class UpdateInfoForm extends React.Component {
               valuePropName: 'img',
               getValueFromEvent: this.normFile
             })(
-              <AvatarImg imageUrl='/default.png' action="/file/upload" user={this.props.user} onChange={()=>{}} />
+              <AvatarImg imageUrl='/default.png' action="/file/upload" user={info.person} onChange={()=>{}} />
             )}
           </FormItem> 
           <FormItem
@@ -244,7 +245,7 @@ class UpdateInfoForm extends React.Component {
               <AvatarFile  action="/file/upload"  onChange={()=>{}} />
             )}
           </FormItem>  
-          {this.props.info.resume.path.length !== 0 ? 
+          {info.resume.path.length !== 0 ? 
           <FormItem
             {...formItemLayout}
             label="已上传的文件"
@@ -256,8 +257,8 @@ class UpdateInfoForm extends React.Component {
             <Button type="primary" htmlType="submit" size="large">修改个人信息</Button>
           </FormItem>
         </Form>
-        : ''}
-        {this.props.role === 1 ? 
+        : ''}      
+      {role === 1 ? 
         <Form onSubmit={this.handleSubmit}>
           <h1>企业用户信息设置页</h1>
           <FormItem
@@ -265,7 +266,7 @@ class UpdateInfoForm extends React.Component {
             label="账号"
           >
             {getFieldDecorator('account', {
-              initialValue:this.props.user.account
+              initialValue:info.company.account
             })(
               <Input disabled/>
             )}
@@ -320,7 +321,7 @@ class UpdateInfoForm extends React.Component {
             )}
           >
             {getFieldDecorator('name', {
-              initialValue:this.props.info.name,
+              initialValue:info.name,
               rules: [{ whitespace: true }],
             })(
               <Input />
@@ -331,7 +332,7 @@ class UpdateInfoForm extends React.Component {
             label="公司地址"
           >
             {getFieldDecorator('address', {
-              initialValue:this.props.info.address,
+              initialValue:info.address,
               rules: [{ required: true, message: 'Please input your company address!' }],
             })(
               <Input />
@@ -342,7 +343,7 @@ class UpdateInfoForm extends React.Component {
             label="公司规模"
           >
             {getFieldDecorator('size', {
-              initialValue:this.props.info.size
+              initialValue:info.size
             })(
               <RadioGroup>
                 <Radio value="0">少于100人</Radio>
@@ -356,7 +357,7 @@ class UpdateInfoForm extends React.Component {
             label="公司成立时间"
           >
             {getFieldDecorator('foundAt', {
-              initialValue:moment(this.props.info.foundAt).format('YYYY-MM-DD')
+              initialValue:moment(info.foundAt).format('YYYY-MM-DD')
             })(
               <Input type="date"/>
             )}
@@ -369,15 +370,15 @@ class UpdateInfoForm extends React.Component {
               valuePropName: 'img',
               getValueFromEvent: this.normFile
             })(
-              <AvatarImg imageUrl='/default.png' action="/file/upload" user={this.props.user} onChange={()=>{}} />
+              <AvatarImg imageUrl='/default.png' action="/file/upload" user={info.company} onChange={()=>{}} />
             )}
           </FormItem>           
           <FormItem {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit" size="large">修改企业信息</Button>
           </FormItem>
         </Form>
-        : ''}
-        {this.props.role === 2 ? 
+        : ''}        
+        {role === 2 ? 
           <Form onSubmit={this.handleSubmit}>
             <h1>管理员信息设置页</h1>
             <FormItem
@@ -385,7 +386,7 @@ class UpdateInfoForm extends React.Component {
               label="账号"
             >
               {getFieldDecorator('account', {
-                initialValue:this.props.user.account
+                initialValue:info.adminstrator.account
               })(
                 <Input disabled/>
               )}
@@ -440,7 +441,7 @@ class UpdateInfoForm extends React.Component {
               )}
             >
               {getFieldDecorator('name', {
-                initialValue:this.props.info.name,
+                initialValue:info.name,
                 rules: [{ whitespace: true }],
               })(
                 <Input />
@@ -451,7 +452,7 @@ class UpdateInfoForm extends React.Component {
               label="手机号码"
             >
               {getFieldDecorator('phone', {
-                initialValue:this.props.info.phone,
+                initialValue:info.phone,
                 rules: [{ required: true, message: 'Please input your phone number!' }],
               })(
                 <Input />
@@ -461,27 +462,30 @@ class UpdateInfoForm extends React.Component {
               <Button type="primary" htmlType="submit" size="large">修改管理员信息</Button>
             </FormItem>
           </Form>
-        : ''}        
+        : ''}            
       </div>
-    );
+    )
   }
 }
 
-function mapStateToProps(state){
-  let info,role = state.user.user.role
-  if(role === 0){
-    info = state.user.info || {resume:{path:[]}}
-  }else if(role === 1){
-    info = state.user.info || {}
-  }else if(role === 2){
-    info = state.user.info || {}
+
+function mapStateToProps(state,ownProps){
+  let {role,id} = ownProps.params,info
+  if(role === '0'){
+    info = state.admin.people.filter((item) => {return item._id === id})
+
+  }else if(role === '1'){
+    info = state.admin.companys.filter((item) => {return item._id === id})
+  }else{
+    info = state.admin.admins.filter((item) => {return item._id === id})
   }
 
-	return {
-		user:state.user.user,
-    info:info,
-    role:role,
-	}
+  return {
+    id:id,
+    info:info[0],
+    role:Number(role),
+  }
 }
 
-module.exports = connect(mapStateToProps)(Form.create()(UpdateInfoForm))
+
+module.exports = connect(mapStateToProps)(Form.create()(UserSetting))

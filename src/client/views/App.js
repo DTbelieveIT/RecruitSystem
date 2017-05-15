@@ -238,6 +238,22 @@ class App extends Component {
 		                        	</Link>
 						        </Menu.Item>
 					        : null}	
+					        {this.props.user.role === 2 ? 
+						        <Menu.Item key="userAdmin">
+		 							<Link to={'/admin/user'}>
+						        		<Icon type="api" />
+		                            	<span className="nav-text">用户信息管理</span>
+		                        	</Link>
+						        </Menu.Item>
+					        : null}	
+					        {this.props.user.role === 2 ? 
+						        <Menu.Item key="recruitmentAdmin">
+		 							<Link to={'/admin/recruitment'}>
+						        		<Icon type="global" />
+		                            	<span className="nav-text">招聘信息管理</span>
+		                        	</Link>
+						        </Menu.Item>
+					        : null}						        					        
 			          </Menu>
 			        </Sider>				
 					<Notification />

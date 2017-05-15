@@ -29,11 +29,17 @@ let PresonSchema = new mongoose.Schema({
 })
 
 PresonSchema.statics = {
-	fetch:function(cb){
-		return this
-		.find({})
-		.sort('meta.updateAt')
-		.exec(cb)
+	fetch:function(){
+		return new Promise((resolve,reject) => {
+			this
+			.find({})
+			.sort('meta.updateAt')
+			.populate('person','-password')
+			.populate('resume.job')
+			.exec((err,info) => {
+				resolve(info)
+			})
+		})
 	},
 	findById:function(id,cb){
 		return this

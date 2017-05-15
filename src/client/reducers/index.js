@@ -1,9 +1,10 @@
 import {combineReducers} from 'redux'
 import {
 	QUERYJOBLIST,RECRUITMENTLIST,UPDATERECRUITMENT,UPDATERECRUITMENTSTATUS,  //recruitment
-	GETHISTORYMESSAGE,UPDATEMESSAGE,GETUNREADMESSAGE,GETLINKMANS,MSGINITIALIZE,UPDATERECRUITMESSAGE,UPDATESTATUSMESSAGE, //message
+	UPDATEMESSAGE,GETUNREADMESSAGE,GETLINKMANS,MSGINITIALIZE,UPDATERECRUITMESSAGE,UPDATESTATUSMESSAGE, //message
 	LOGINSUCCESS,ONLINE,OFFLINE,INITIALIZE,UPDATEINFO, //user
-	OPENNOTIFICATION,CLOSENOTIFICATION  //ui
+	OPENNOTIFICATION,CLOSENOTIFICATION,  //ui
+	GETALLUSERINFO,DELUSERINFO  //admin
 } from '../constants/Const'
 
 /**
@@ -49,8 +50,6 @@ let msgInitialState = {
  	switch(action.type){
 		case MSGINITIALIZE:
 			return msgInitialState
- 		case GETHISTORYMESSAGE:
- 			return {...state,message:action.data}
 		case GETUNREADMESSAGE:
 			return {...state,msgList:action.msgList}
 		case GETLINKMANS:
@@ -111,9 +110,32 @@ function ui(state={
 	}
 }
 
+
+function admin(state={
+	admins:[],
+	people:[],
+	companys:[],
+},action){
+	switch(action.type){
+		case GETALLUSERINFO:
+			return {...state,admins:action.data.admins,people:action.data.people,companys:action.data.companys}
+		case DELUSERINFO:
+			if(action.role === 0){
+				return {...state,people:state.people.filter((item) => {return item._id!==action.id})}			
+			}else if(action.role === 1){
+				return {...state,companys:state.companys.filter((item) => {return item._id!==action.id})}
+			}else if(action.role === 2){
+				return {...state,admins:state.admins.filter((item) => {return item._id!==action.id})}
+			}
+		default:
+			return state
+	}
+}
+
 export default combineReducers({
 	message,
 	recruitment,
 	user,
 	ui,
+	admin,
 })

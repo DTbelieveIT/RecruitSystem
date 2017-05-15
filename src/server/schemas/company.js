@@ -25,11 +25,16 @@ let CompanySchema = new mongoose.Schema({
 })
 
 CompanySchema.statics = {
-	fetch:function(cb){
-		return this
-		.find({})
-		.sort('meta.updateAt')
-		.exec(cb)
+	fetch:function(){
+		return new Promise((resolve,reject) => {
+			this
+			.find({})
+			.sort('meta.updateAt')
+			.populate('company','-password')
+			.exec((err,info) => {
+				resolve(info)
+			})
+		})
 	},
 	findById:function(id,cb){
 		return this

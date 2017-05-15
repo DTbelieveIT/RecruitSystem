@@ -26,12 +26,6 @@ const Logon = (location,callback) => {
 	},'Logon')
 }
 
-const Agreement = (location,callback) => {
-	require.ensure([],require => {
-		callback(null,require('./views/login/Agreement'))
-	},'Agreement')
-}
-
 //main
 const Main = (location,callback) => {
 	require.ensure([],require => {
@@ -89,6 +83,31 @@ const DeliveryDetail = (location,callback) => {
 	},'DeliveryDetail')	
 }
 
+//admin
+const UserAdmin = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/admin/UserAdmin'))
+	},'UserAdmin')	
+}
+
+const RecruitmentAdmin = (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/admin/RecruitmentAdmin'))
+	},'RecruitmentAdmin')	
+}
+
+const UserSetting =  (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/admin/UserSetting'))
+	},'UserSetting')	
+}
+
+const UserDetail =  (location,callback) => {
+	require.ensure([],require => {
+		callback(null,require('./views/main/admin/UserDetail'))
+	},'UserDetail')	
+}
+
 //chat
 const Chat = (location,callback) => {
 	require.ensure([],require => {
@@ -103,7 +122,6 @@ render((
 				<IndexRoute getComponent={Home}/>
 				<Route path="login" getComponent={Login}/>
 				<Route path="logon" getComponent={Logon}/>
-				<Route path="agreement" getComponent={Agreement}/>
 				<Route path="main" getComponent={Main}>
 					<IndexRoute getComponent={RecruitmentList}/>
 					<Route path="addRecruitment" getComponent={AddRecruitment}/>
@@ -115,6 +133,10 @@ render((
 					<Route path="/delivery/:uid/:rid" getComponent={DeliveryDetail}/>
 					<Route path="setting" getComponent={Setting}/>
 					<Route path="/chat/:id" getComponent={Chat} />			
+					<Route path="/admin/user" getComponent={UserAdmin} />			
+					<Route path="/admin/recruitment" getComponent={RecruitmentAdmin} />			
+					<Route path="/admin/setting/:role/:id" getComponent={UserSetting}/>
+					<Route path="/admin/detail/:role/:id" getComponent={UserDetail}/>
 				</Route>
 			</Route>
 		</Router>

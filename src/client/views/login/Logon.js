@@ -19,6 +19,7 @@ class Logon extends React.Component {
             confirmDirty: false,
             role: '0',
             size:'0',
+            show:false,
         }
     }
     handleSubmit = (e) => {
@@ -53,6 +54,11 @@ class Logon extends React.Component {
         this.setState({
             confirmDirty: this.state.confirmDirty || !!value
         });
+    }
+    handleClick = (e) => {
+        this.setState({
+            show:!this.state.show
+        })
     }
     checkPassword = (rule, value, callback) => {
         const form = this.props.form;
@@ -112,222 +118,236 @@ class Logon extends React.Component {
         );
         return (
             <div className="logon-page">
-            <Form onSubmit={this.handleSubmit}>
-        <FormItem
-            {...formItemLayout}
-            label="账号"
-            hasFeedback
+                <Form onSubmit={this.handleSubmit}>
+            <FormItem
+                {...formItemLayout}
+                label="账号"
+                hasFeedback
+                >
+              {getFieldDecorator('account', {
+                    rules: [{
+                        required: true,
+                        message: 'Please input your account!',
+                    }],
+                })(
+                    <Input />
+                )}
+            </FormItem>
+            <FormItem
+                {...formItemLayout}
+                label="密码"
+                hasFeedback
+                >
+              {getFieldDecorator('password', {
+                    rules: [{
+                        required: true,
+                        message: 'Please input your password!',
+                    }, {
+                        validator: this.checkConfirm,
+                    }],
+                })(
+                    <Input type="password" />
+                )}
+            </FormItem>
+            <FormItem
+                {...formItemLayout}
+                label="再次确认密码"
+                hasFeedback
+                >
+              {getFieldDecorator('confirm', {
+                    rules: [{
+                        required: true,
+                        message: 'Please confirm your password!',
+                    }, {
+                        validator: this.checkPassword,
+                    }],
+                })(
+                    <Input type="password" onBlur={this.handleConfirmBlur} />
+                )}
+            </FormItem>
+            <FormItem
+                {...formItemLayout}
+                label="角色类型"
+                >
+              {getFieldDecorator('role', {
+                    initialValue: this.state.role,
+                    getValueFromEvent:this.handleChange             
+                })(
+                    <RadioGroup>
+                  <Radio value="0">普通用户</Radio>
+                  <Radio value="1">企业用户</Radio>
+                  <Radio value="2">管理员用户</Radio>
+                </RadioGroup>
+                )}
+            </FormItem>   
+            {this.state.role === '0' ? (
+            	<div>
+            <FormItem
+                {...formItemLayout}
+                label="用户姓名"
+                hasFeedback
+                >
+              {getFieldDecorator('p[name]', {
+                    rules: [{
+                        required: true,
+                        message: 'Please input your name!',
+                    }],
+                })(
+                    <Input />
+                )}
+            </FormItem>
+             <FormItem
+                {...formItemLayout}
+                label="手机号码"
+                >
+              {getFieldDecorator('p[phone]', {
+                    rules: [{
+                        required: true,
+                        message: 'Please input your phone number!'
+                    }],
+                })(
+                    <Input addonBefore={prefixSelector} />
+                )}
+            </FormItem>
+                    <FormItem
+              {...formItemLayout}
+              label="用户邮箱"
+              hasFeedback
             >
-          {getFieldDecorator('account', {
+              {getFieldDecorator('p[email]', {
                 rules: [{
-                    required: true,
-                    message: 'Please input your account!',
-                }],
-            })(
-                <Input />
-            )}
-        </FormItem>
-        <FormItem
-            {...formItemLayout}
-            label="密码"
-            hasFeedback
-            >
-          {getFieldDecorator('password', {
-                rules: [{
-                    required: true,
-                    message: 'Please input your password!',
+                  type: 'email', message: 'The input is not valid E-mail!',
                 }, {
-                    validator: this.checkConfirm,
+                  required: true, message: 'Please input your E-mail!',
                 }],
-            })(
-                <Input type="password" />
-            )}
-        </FormItem>
-        <FormItem
-            {...formItemLayout}
-            label="再次确认密码"
-            hasFeedback
-            >
-          {getFieldDecorator('confirm', {
-                rules: [{
-                    required: true,
-                    message: 'Please confirm your password!',
-                }, {
-                    validator: this.checkPassword,
-                }],
-            })(
-                <Input type="password" onBlur={this.handleConfirmBlur} />
-            )}
-        </FormItem>
-        <FormItem
-            {...formItemLayout}
-            label="角色类型"
-            >
-          {getFieldDecorator('role', {
-                initialValue: this.state.role,
-                getValueFromEvent:this.handleChange             
-            })(
-                <RadioGroup>
-              <Radio value="0">普通用户</Radio>
-              <Radio value="1">企业用户</Radio>
-              <Radio value="2">管理员用户</Radio>
-            </RadioGroup>
-            )}
-        </FormItem>   
-        {this.state.role === '0' ? (
-        	<div>
-        <FormItem
-            {...formItemLayout}
-            label="用户姓名"
-            hasFeedback
-            >
-          {getFieldDecorator('p[name]', {
-                rules: [{
-                    required: true,
-                    message: 'Please input your name!',
-                }],
-            })(
+              })(
                 <Input />
-            )}
-        </FormItem>
-         <FormItem
-            {...formItemLayout}
-            label="手机号码"
-            >
-          {getFieldDecorator('p[phone]', {
-                rules: [{
-                    required: true,
-                    message: 'Please input your phone number!'
-                }],
-            })(
-                <Input addonBefore={prefixSelector} />
-            )}
-        </FormItem>
-                <FormItem
-          {...formItemLayout}
-          label="用户邮箱"
-          hasFeedback
-        >
-          {getFieldDecorator('p[email]', {
-            rules: [{
-              type: 'email', message: 'The input is not valid E-mail!',
-            }, {
-              required: true, message: 'Please input your E-mail!',
-            }],
-          })(
-            <Input />
-          )}
-        </FormItem>
-                <FormItem
-            {...formItemLayout}
-            label="现居地"
-            >
-          {getFieldDecorator('p[address]', {})(
-                <input />
-            )}
-        </FormItem>
-                <FormItem
-            {...formItemLayout}
-            label="想要从事的职业"
-            >
-          {getFieldDecorator('p[job]', {})(
-                <input />
-            )}
-        </FormItem>
-        </div>
-        ) : null}  
-        {this.state.role === '1' ? (
-        	<div>
-                <FormItem
-            {...formItemLayout}
-            label="公司名称"
-            hasFeedback
-            >
-          {getFieldDecorator('c[name]', {
-                rules: [{
-                    required: true,
-                    message: 'Please input your company name!',
-                }],
-            })(
-                <Input />
-            )}
-        </FormItem>
-        <FormItem
-            {...formItemLayout}
-            label="公司规模"
-            >
-          {getFieldDecorator('c[size]', {
-                initialValue: this.state.size,           
-            })(
-                <RadioGroup>
-              <Radio value="0">100人以下</Radio>
-              <Radio value="1">1000人以下</Radio>
-              <Radio value="2">1000人以上</Radio>
-            </RadioGroup>
-            )}
-        </FormItem>        
-        <FormItem
-            {...formItemLayout}
-            label="公司地址"
-            >
-          {getFieldDecorator('c[address]', {})(
-                <input />
-            )}
-        </FormItem>
-        <FormItem
-            {...formItemLayout}
-            label="公司成立时间"
-            >
-          {getFieldDecorator('c[foundAt]', {})(
-                <DatePicker />
-            )}
-        </FormItem> 
-        </div>       
-        ): null}   
-       {this.state.role === '2' ? (
-       	<div>
-                <FormItem
-            {...formItemLayout}
-            label="管理员姓名"
-            hasFeedback
-            >
-          {getFieldDecorator('a[name]', {
-                rules: [{
-                    required: true,
-                    message: 'Please input your adminstrator name!',
-                }],
-            })(
-                <Input />
-            )}
-        </FormItem>
-                <FormItem
-            {...formItemLayout}
-            label="手机号码"
-            >
-          {getFieldDecorator('a[phone]', {
-                rules: [{
-                    required: true,
-                    message: 'Please input your phone number!'
-                }],
-            })(
-                <Input addonBefore={prefixSelector} />
-            )}
-        </FormItem> 
-        </div>       
-       	) : null}
-        <FormItem {...tailFormItemLayout} style={{
-                marginBottom: 8
-            }}>
-          {getFieldDecorator('agreement', {
-                valuePropName: 'checked',
-            })(
-                <Checkbox>I have read the <Link to="agreement">agreement</Link></Checkbox>
-            )}
-        </FormItem>
-        <FormItem {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" size="large">Register</Button>
-        </FormItem>
-      </Form>
+              )}
+            </FormItem>
+                    <FormItem
+                {...formItemLayout}
+                label="现居地"
+                >
+              {getFieldDecorator('p[address]', {})(
+                    <input />
+                )}
+            </FormItem>
+                    <FormItem
+                {...formItemLayout}
+                label="想要从事的职业"
+                >
+              {getFieldDecorator('p[job]', {})(
+                    <input />
+                )}
+            </FormItem>
+            </div>
+            ) : null}  
+            {this.state.role === '1' ? (
+            	<div>
+                    <FormItem
+                {...formItemLayout}
+                label="公司名称"
+                hasFeedback
+                >
+              {getFieldDecorator('c[name]', {
+                    rules: [{
+                        required: true,
+                        message: 'Please input your company name!',
+                    }],
+                })(
+                    <Input />
+                )}
+            </FormItem>
+            <FormItem
+                {...formItemLayout}
+                label="公司规模"
+                >
+              {getFieldDecorator('c[size]', {
+                    initialValue: this.state.size,           
+                })(
+                    <RadioGroup>
+                  <Radio value="0">100人以下</Radio>
+                  <Radio value="1">1000人以下</Radio>
+                  <Radio value="2">1000人以上</Radio>
+                </RadioGroup>
+                )}
+            </FormItem>        
+            <FormItem
+                {...formItemLayout}
+                label="公司地址"
+                >
+              {getFieldDecorator('c[address]', {})(
+                    <input />
+                )}
+            </FormItem>
+            <FormItem
+                {...formItemLayout}
+                label="公司成立时间"
+                >
+              {getFieldDecorator('c[foundAt]', {})(
+                    <DatePicker />
+                )}
+            </FormItem> 
+            </div>       
+            ): null}   
+           {this.state.role === '2' ? (
+           	<div>
+            <FormItem
+                {...formItemLayout}
+                label="管理员姓名"
+                hasFeedback
+                >
+              {getFieldDecorator('a[name]', {
+                    rules: [{
+                        required: true,
+                        message: 'Please input your adminstrator name!',
+                    }],
+                })(
+                    <Input />
+                )}
+            </FormItem>
+            <FormItem
+                {...formItemLayout}
+                label="手机号码"
+                >
+              {getFieldDecorator('a[phone]', {
+                    rules: [{
+                        required: true,
+                        message: 'Please input your phone number!'
+                    }],
+                })(
+                    <Input addonBefore={prefixSelector} />
+                )}
+            </FormItem> 
+            </div>       
+           	) : null}
+            <FormItem {...tailFormItemLayout} style={{
+                    marginBottom: 8
+                }}
+                hasFeedback>
+              {getFieldDecorator('agreement', {
+                    valuePropName: 'checked',
+                    rules: [{
+                        required: true,
+                        message: 'Please check it!'
+                    }],
+                })(
+                    <div className="wrap" ><Checkbox>I have read the </Checkbox><span className="content" style={{color:'#108ee9'}} onClick={this.handleClick}>agreement</span></div>
+                )}
+            </FormItem>
+            <FormItem {...tailFormItemLayout}>
+              <Button type="primary" htmlType="submit" size="large">Register</Button>
+            </FormItem>
+          </Form>
+            {this.state.show ? 
+                <div className="agreement">
+                    <h1>您好，这是本平台的同意协议书</h1>
+                    <Button type="default" size="large" className="btn" onClick={this.handleClick}>关闭</Button>
+                </div> 
+            : null}
+            {this.state.show ? 
+                <div className="mask" onClick={this.handleClick}></div>
+            : null}
         </div>
         );
     }
@@ -335,10 +355,5 @@ class Logon extends React.Component {
 
 
 
-function mapStateToProps(state) {
-    return {
 
-    }
-}
-
-module.exports = connect(mapStateToProps)(Form.create()(Logon))
+module.exports = Form.create()(Logon)

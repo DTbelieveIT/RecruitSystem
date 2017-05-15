@@ -36,7 +36,7 @@ class RecruitmentManage extends Component{
             </ul>
         </div>
       }else{
-        content = ''
+        content = '暂无投递者'
       }
 
       return (
@@ -67,7 +67,6 @@ function mapStateToProps(state,ownProps){
     ls.setItem('recruitment',state.recruitment)
   }
   state.recruitment = ls.getItem('recruitment')
-  console.log(state.recruitment)
 
   let infos = state.recruitment.infos.filter((info) => {
     return info.company._id === cid

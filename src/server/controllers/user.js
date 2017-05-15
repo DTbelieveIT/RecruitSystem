@@ -167,29 +167,32 @@ exports.getUserInfo = async (req,res) => {
 	res.send({info:info})
 }
 
+exports.delUserInfo = async (req,res) => {
+	let {role,id} = req.body,info
+	if(role === 0){
+		info = await Person.findOne({_id:id})
+		await User.remove({_id:info.person})
+		await Person.remove({_id:id})
+	}else if(role == 1){
+		info = await Company.findOne({_id:id})
+		await User.remove({_id:info.company})
+		await Company.remove({_id:id})
+	}else{
+		info = await Adminstrator.findOne({_id:id})
+		await User.remove({_id:info.adminstrator})
+		await Adminstrator.remove({_id:id})
+	}
+	res.send({status:200,id:id,role:role})
+}
+
 exports.test  = async (req,res) => {
 	mysocket.current()
 	res.send({status:'ok'})
-	// let {id,uid} = req.query
-	// let info = await Recruitment.fetchById(id)
-	// console.log(info.person)
-	// let result = info.person.find(function(person){
-	// 	//严格等于时不相等，可能是ObjectId类型
-	// 	return person._id == uid
-	// })
-	// if(!result){
-	// 	console.log('新投递者')
-	// 	await Recruitment.update({_id:id},{$push:{person:uid}})
-	// }
-	// res.send({result:info})
 }
 
 exports.test1 = async (req,res) => {
-	let {uid,rid} = req.query
-	let result = await Message.update({to:uid,recruitment:rid,msgType:'resume'},{$set:{readed:true}},{multi:true})
-	console.log(result)
-	let info = await Message.find({to:uid,recruitment:rid,msgType:'resume'})
-	console.log(info)
+	let admins = await Adminstrator.fetch()
 
-	res.send({status:'消息更新'})
+
+	res.send({admins})
 }
